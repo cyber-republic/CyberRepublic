@@ -49,12 +49,13 @@ export default class extends Base {
   }
 
   public async show(param: any): Promise<Document> {
-    return this.model.findById(param.suggestionId).populate('createdBy', constant.DB_EXCLUDED_FIELDS.USER)
+      return this.model.getDBInstance()
+        .findById(param.suggestionId)
+        .populate('createdBy', constant.DB_SELECTED_FIELDS.USER.NAME)
   }
 
   // like or unlike
   public async like(param: any): Promise<Document> {
-    console.log('service like: ', param)
     const { suggestionId: _id } = param
     const userId = _.get(this.currentUser, '_id')
     const doc = await this.model.findById(_id)
@@ -92,13 +93,13 @@ export default class extends Base {
 
     // already liked, will unlike, use ObjectId.equals to compare
     if (_.findIndex(dislikes, oid => userId.equals(oid)) !== -1) {
-      this.model.findOneAndUpdate({ _id }, {
+      await this.model.findOneAndUpdate({ _id }, {
         $pull: { dislikes: userId },
         $inc: { dislikesNum: -1 }
       })
     } else {
       // not like yet, will like it
-      this.model.findOneAndUpdate({ _id }, {
+      await this.model.findOneAndUpdate({ _id }, {
         $push: { dislikes: userId },
         $inc: { dislikesNum: 1 }
       })
@@ -109,20 +110,21 @@ export default class extends Base {
 
   // subscribe <=> unfollow
   public async subscribe(param: any): Promise<Document> {
+    // willSubscribe: Boolean
     const { suggestionId: _id, willSubscribe } = param
     const userId = _.get(this.currentUser, '_id')
     const doc = await this.model.findById(_id)
     const { subscribers } = doc
 
-    // already followed
-    if (willSubscribe && _.includes(subscribers, userId)) return doc
+    // already subscribed
+    if (willSubscribe && _.findIndex(subscribers, oid => userId.equals(oid)) !== -1) return doc
 
     // not subscribe yet, will subscribe
-    this.model.findOneAndUpdate({ _id }, {
-      $push: {
-        subscribers: userId
-      }
+    await this.model.findOneAndUpdate({ _id }, {
+      $push: { subscribers: userId },
     })
+
+    // TODO: add email notification in CommentService.js
 
     return this.model.findById(_id)
 
@@ -133,7 +135,7 @@ export default class extends Base {
     const updateObject = {
       abusedStatus: constant.SUGGESTION_ABUSED_STATUS.REPORTED
     }
-    this.model.findOneAndUpdate({ _id }, updateObject)
+    await this.model.findOneAndUpdate({ _id }, updateObject)
     return this.model.findById(_id)
   }
 
@@ -147,7 +149,7 @@ export default class extends Base {
       status: constant.SUGGESTION_STATUS.ABUSED,
       abusedStatus: constant.SUGGESTION_ABUSED_STATUS.HANDLED
     }
-    this.model.findOneAndUpdate({ _id }, updateObject)
+    await this.model.findOneAndUpdate({ _id }, updateObject)
     return this.model.findById(_id)
   }
 
@@ -157,7 +159,7 @@ export default class extends Base {
     const updateObject = {
       status: constant.SUGGESTION_STATUS.ARCHIVED,
     }
-    this.model.findOneAndUpdate({ _id }, updateObject)
+    await this.model.findOneAndUpdate({ _id }, updateObject)
     return this.model.findById(_id)
   }
 
@@ -167,6 +169,9 @@ export default class extends Base {
     return this.model.findByIdAndDelete(_id)
   }
 
+  /**
+   * Utils
+   */
   public validateTitle(title) {
     if (!validate.valid_string(title, 4)) {
       throw 'invalid title'
