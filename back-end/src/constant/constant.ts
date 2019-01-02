@@ -161,5 +161,13 @@ export const SUGGESTION_ABUSED_STATUS = create(['REPORTED', 'HANDLED'])
 
 // DB sensitive data we do not want to explosure
 export const DB_EXCLUDED_FIELDS = {
-    USER: '-password -salt -email -resetToken',
+    USER: {
+        SENSITIVE: '-password -salt -email -resetToken',
+    },
+}
+
+export const DB_SELECTED_FIELDS = {
+    USER: {
+        NAME: 'profile.firstName profile.lastName'
+    },
 }
