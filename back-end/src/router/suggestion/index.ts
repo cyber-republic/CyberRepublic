@@ -7,6 +7,9 @@ import dislike from './dislike'
 import reportabuse from './reportabuse'
 import subscribe from './subscribe'
 import comment from './comment'
+import abuse from './abuse'
+import archive from './archive'
+import del from './delete'
 
 export default Base.setRouter([
   {
@@ -47,6 +50,21 @@ export default Base.setRouter([
   {
     path: '/comment',
     router: comment,
+    method: 'post',
+  },
+  {
+    path: '/abuse',
+    router: abuse,
+    method: 'post',
+  },
+  {
+    path: '/archive',
+    router: archive,
+    method: 'post',
+  },
+  {
+    path: '/delete',
+    router: del,
     method: 'post',
   },
 ])

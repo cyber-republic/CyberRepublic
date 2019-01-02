@@ -1,8 +1,9 @@
-import Base from '../Base';
-import SuggestionService from '../../service/SuggestionService';
-import * as _ from 'lodash';
+import Base from '../Base'
+import SuggestionService from '../../service/SuggestionService'
+import * as _ from 'lodash'
 
 export default class extends Base {
+  protected needLogin = false
 
   /**
    * For consistency we call the service
@@ -12,8 +13,8 @@ export default class extends Base {
    * @returns {Promise<["mongoose".Document]>}
    */
   public async action() {
-    const service = this.buildService(SuggestionService);
-    const param = this.getParam();
+    const service = this.buildService(SuggestionService)
+    const param = this.getParam()
 
     if (param.search) {
       param.name = { $regex: _.trim(param.search), $options: 'i' }
