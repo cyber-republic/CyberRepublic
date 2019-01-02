@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-const create = (constant_list: [string]): any => {
+const create = (constant_list: string[]): any => {
     const map = {};
     _.each(constant_list, (key)=>{
         map[key] = key;
@@ -154,3 +154,12 @@ export const SORT_ORDER = create(['ASC', 'DESC'])
 export const USER_PROFESSION = create(['ENGINEERING', 'COMPUTER_SCIENCE', 'PRODUCT_MANAGEMENT',
     'ART_DESIGN', 'SALES', 'MARKETING', 'BUSINESS_FINANCE', 'ENTREPRENEUR', 'STUDENT',
     'HEALTH_MEDICINE', 'LITERATURE_WRITING', 'TRANSLATION', 'LAW', 'ECONOMICS', 'MANAGEMENT'])
+
+export const SUGGESTION_STATUS = create(['ACTIVE', 'ABUSED', 'ARCHIVED'])
+
+export const SUGGESTION_ABUSED_STATUS = create(['REPORTED', 'HANDLED'])
+
+// DB sensitive data we do not want to explosure
+export const DB_EXCLUDED_FIELDS = {
+    USER: '-password -salt -email -resetToken',
+}
