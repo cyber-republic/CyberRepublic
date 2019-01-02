@@ -1,16 +1,21 @@
 import { Schema } from 'mongoose'
-import { CommentSchema } from './CommentSchema';
-import { SubscriberSchema } from './SubscriberSchema';
-import { constant } from '../../constant';
+import { CommentSchema } from './CommentSchema'
+import { SubscriberSchema } from './SubscriberSchema'
+import { constant } from '../../constant'
+import * as _ from 'lodash'
 
 export const Suggestion = {
     title: {
         type: String,
         required: true,
+        minlength: 1,
+        maxLength: 100,
     },
     desc: {
         type: String,
         required: true,
+        minlength: 1,
+        // maxLength: 10000,
     },
     likes: {
         type: [Schema.Types.ObjectId],
@@ -37,6 +42,10 @@ export const Suggestion = {
         default: 0
     },
     comments: [[CommentSchema]],
+    commentsNum: {
+        type: Number,
+        default: 0,
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -45,8 +54,19 @@ export const Suggestion = {
     // constans.SUGGESTION_STATUS: ACTIVE, ABUSED, ARCHIVED. abuse will also be archived
     status: {
         type: String,
-        default: constant.SUGGESTION_STATUS.ACTIVE
+        uppercase: true,
+        enum: _.keys(constant.SUGGESTION_STATUS),
+        default: constant.SUGGESTION_STATUS.ACTIVE,
     },
-    abusedStatus: String, // constant.SUGGESTION_ABUSED_STATUS: REPORTED, HANDLED
-    subscribers: [SubscriberSchema]
+    // constant.SUGGESTION_ABUSED_STATUS: REPORTED, HANDLED
+    abusedStatus: {
+        type: String,
+        uppercase: true,
+        enum: _.keys(constant.SUGGESTION_ABUSED_STATUS)
+    },
+    subscribers: [SubscriberSchema],
+    subscribersNum: {
+        type: Number,
+        default: 0,
+    },
 }
