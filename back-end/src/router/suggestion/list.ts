@@ -1,6 +1,6 @@
 import Base from '../Base';
 import SuggestionService from '../../service/SuggestionService';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 export default class extends Base {
 
