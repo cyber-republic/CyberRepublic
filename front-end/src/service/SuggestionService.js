@@ -66,4 +66,12 @@ export default class extends BaseService {
 
         return res
     }
+    async reportAbuse(_id) {
+        const res = await api_request({
+            path: `/api/suggestion/${_id}/reportabuse`,
+            method: 'post'
+        })
+
+        return res
+    }
 }

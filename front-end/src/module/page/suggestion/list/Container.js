@@ -1,7 +1,8 @@
 import _ from 'lodash'
 import { createContainer } from '@/util'
-import { USER_ROLE, SUGGESTION_STATUS } from '@/constant'
+import { SUGGESTION_STATUS } from '@/constant'
 import SuggestionService from '@/service/SuggestionService'
+import CommentService from '@/service/CommentService'
 import Component from './Component'
 
 const mapState = (state) => {
@@ -18,25 +19,41 @@ const mapState = (state) => {
 }
 
 const mapDispatch = () => {
-    const suggestionService = new SuggestionService()
+    const service = new SuggestionService()
+    const commentService = new CommentService()
 
     return {
         async getSuggestions(query) {
-            return suggestionService.list({
+            return service.list({
                 status: SUGGESTION_STATUS.ACTIVE,
                 ...query
             })
         },
 
         async loadMoreSuggestions(query) {
-            return suggestionService.loadMore({
+            return service.loadMore({
                 status: SUGGESTION_STATUS.ACTIVE,
                 ...query
             })
         },
 
         resetAll() {
-            return suggestionService.resetAll()
+            return service.resetAll()
+        },
+
+        async create(doc) {
+            return service.create(doc)
+        },
+
+        async reportAbuse(_id) {
+            return service.reportAbuse(_id)
+        },
+        async subscribe(_id) {
+            return commentService.subscribe('suggestion', _id)
+        },
+
+        async unsubscribe(_id) {
+            return commentService.unsubscribe('suggestion', _id)
         }
     }
 }

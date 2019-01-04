@@ -50,14 +50,15 @@ export default class extends Base {
   }
 
   public async show(param: any): Promise<Document> {
-      return this.model.getDBInstance()
-        .findById(param.suggestionId)
-        .populate('createdBy', constant.DB_SELECTED_FIELDS.USER.NAME)
+    const { id: _id } = param
+    return this.model.getDBInstance()
+      .findById(_id)
+      .populate('createdBy', constant.DB_SELECTED_FIELDS.USER.NAME)
   }
 
   // like or unlike
   public async like(param: any): Promise<Document> {
-    const { suggestionId: _id } = param
+    const { id: _id } = param
     const userId = _.get(this.currentUser, '_id')
     const doc = await this.model.findById(_id)
     const { likes, dislikes } = doc
@@ -84,7 +85,7 @@ export default class extends Base {
   // dislike <=> undislike
   // can not both like and dislike
   public async dislike(param: any): Promise<Document> {
-    const { suggestionId: _id } = param
+    const { id: _id } = param
     const userId = _.get(this.currentUser, '_id')
     const doc = await this.model.findById(_id)
     const { likes, dislikes } = doc
@@ -109,30 +110,34 @@ export default class extends Base {
     return this.model.findById(_id)
   }
 
-  // subscribe <=> unfollow
-  public async subscribe(param: any): Promise<Document> {
-    // willSubscribe: Boolean
-    const { suggestionId: _id, willSubscribe } = param
-    const userId = _.get(this.currentUser, '_id')
-    const doc = await this.model.findById(_id)
-    const { subscribers } = doc
+  // // subscribe <=> unsubscribe
+  // public async subscribe(param: any): Promise<Document> {
+  //   // willSubscribe: Boolean
+  //   const { id: _id, willSubscribe } = param
+  //   const userId = _.get(this.currentUser, '_id')
+  //   const doc = await this.model.findById(_id)
 
-    // already subscribed
-    if (willSubscribe && _.findIndex(subscribers, oid => userId.equals(oid)) !== -1) return doc
+  //   // query.$or.push({subscribers: {$in: [currentUserId]}})
 
-    // not subscribe yet, will subscribe
-    await this.model.findOneAndUpdate({ _id }, {
-      $push: { subscribers: userId },
-    })
+  //   const { subscribers } = doc
 
-    // TODO: add email notification in CommentService.js
+  //   // FIXME: already subscribed
+  //   if (willSubscribe && _.findIndex(subscribers, oid => userId.equals(oid)) !== -1) return doc
 
-    return this.model.findById(_id)
+  //   // not subscribe yet, will subscribe
+  //   await this.model.findOneAndUpdate({ _id }, {
+  //     $push: { subscribers: {user: userId, lastSeen: new Date()} },
+  //     $inc: { subscribersNum: 1 }
+  //   })
 
-  }
+  //   // TODO: add email notification in CommentService.js
+
+  //   return this.model.findById(_id)
+
+  // }
 
   public async reportabuse(param: any): Promise<Document> {
-    const { suggestionId: _id } = param
+    const { id: _id } = param
     const updateObject = {
       abusedStatus: constant.SUGGESTION_ABUSED_STATUS.REPORTED
     }
@@ -145,7 +150,7 @@ export default class extends Base {
    */
   public async abuse(param: any): Promise<Document> {
     // TODO: checkPermission admin
-    const { suggestionId: _id } = param
+    const { id: _id } = param
     const updateObject = {
       status: constant.SUGGESTION_STATUS.ABUSED,
       abusedStatus: constant.SUGGESTION_ABUSED_STATUS.HANDLED
@@ -156,7 +161,7 @@ export default class extends Base {
 
   public async archive(param: any): Promise<Document> {
     // TODO: checkPermission admin
-    const { suggestionId: _id } = param
+    const { id: _id } = param
     const updateObject = {
       status: constant.SUGGESTION_STATUS.ARCHIVED,
     }
@@ -166,7 +171,7 @@ export default class extends Base {
 
   public async delete(param: any): Promise<Document> {
     // TODO: checkPermission admin
-    const { suggestionId: _id } = param
+    const { id: _id } = param
     return this.model.findByIdAndDelete(_id)
   }
 
