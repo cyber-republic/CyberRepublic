@@ -210,8 +210,6 @@ const en = {
     'suggestion.reportAbuse': 'Report Abuse',
     'suggestion.translate': 'Translate to English',
     'suggestion.councilMember': 'Council Member',
-    'suggestion.cancel': 'Cancel',
-    'suggestion.submit': 'Submit',
     'suggestion.copy': 'COPY',
     'suggestion.back': 'Back',
     'suggestion.viewAll': 'View All',
@@ -225,6 +223,11 @@ const en = {
     'suggestion.created': 'Created',
     'suggestion.archived': 'Archived',
     'suggestion.search': 'Search',
+    // error
+    'suggestion.create.error.titleRequired': 'Suggestion title is required',
+    'suggestion.create.error.descriptionRequired': 'Suggestion description is required',
+    'suggestion.cancel': 'Cancel',
+    'suggestion.submit': 'Submit',
 
     // Developer
     'developer.breadcrumb.developers': 'Community',

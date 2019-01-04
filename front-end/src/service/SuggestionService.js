@@ -4,7 +4,7 @@ import { api_request } from '@/util'
 
 export default class extends BaseService {
     async loadMore(qry) {
-        const suggestionRedux = this.store.getRedux('suggestion')
+        const selfRedux = this.store.getRedux('suggestion')
         const path = '/api/suggestion/list'
 
         const result = await api_request({
@@ -15,16 +15,16 @@ export default class extends BaseService {
 
         const oldSuggestions = this.store.getState().suggestion.all_suggestions || []
 
-        this.dispatch(suggestionRedux.actions.all_suggestions_total_update(result.total))
-        this.dispatch(suggestionRedux.actions.all_suggestions_update(oldSuggestions.concat(_.values(result.list))))
+        this.dispatch(selfRedux.actions.all_suggestions_total_update(result.total))
+        this.dispatch(selfRedux.actions.all_suggestions_update(oldSuggestions.concat(_.values(result.list))))
 
         return result
     }
 
     async list(qry) {
-        const suggestionRedux = this.store.getRedux('suggestion')
+        const selfRedux = this.store.getRedux('suggestion')
 
-        this.dispatch(suggestionRedux.actions.loading_update(true))
+        this.dispatch(selfRedux.actions.loading_update(true))
 
         const path = '/api/suggestion/list'
         this.abortFetch(path)
@@ -38,10 +38,10 @@ export default class extends BaseService {
                 signal: this.getAbortSignal(path)
             })
 
-            this.dispatch(suggestionRedux.actions.loading_update(false))
-            this.dispatch(suggestionRedux.actions.all_suggestions_reset())
-            this.dispatch(suggestionRedux.actions.all_suggestions_total_update(result.total))
-            this.dispatch(suggestionRedux.actions.all_suggestions_update(_.values(result.list)))
+            this.dispatch(selfRedux.actions.loading_update(false))
+            this.dispatch(selfRedux.actions.all_suggestions_reset())
+            this.dispatch(selfRedux.actions.all_suggestions_total_update(result.total))
+            this.dispatch(selfRedux.actions.all_suggestions_update(_.values(result.list)))
         } catch (e) {
             // Do nothing
         }
@@ -49,7 +49,21 @@ export default class extends BaseService {
         return result
     }
     resetAll() {
-        const suggestionRedux = this.store.getRedux('suggestion')
-        this.dispatch(suggestionRedux.actions.all_suggestions_reset())
+        const selfRedux = this.store.getRedux('suggestion')
+        this.dispatch(selfRedux.actions.all_suggestions_reset())
+    }
+    async create(doc) {
+        const selfRedux = this.store.getRedux('suggestion')
+        this.dispatch(selfRedux.actions.loading_update(true))
+
+        const res = await api_request({
+            path: '/api/suggestion/create',
+            method: 'post',
+            data: doc
+        })
+
+        this.dispatch(selfRedux.actions.loading_update(false))
+
+        return res
     }
 }

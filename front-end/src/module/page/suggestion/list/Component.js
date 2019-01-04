@@ -4,6 +4,7 @@ import {
     Tabs,
     List,
     Icon,
+    Modal,
     Button
 } from 'antd';
 import I18N from '@/I18N'
@@ -11,6 +12,7 @@ import StandardPage from '../../StandardPage';
 import Footer from '@/module/layout/Footer/Container'
 import Navigator from '@/module/page/shared/HomeNavigator/Container'
 import MySuggestion from '../my_list/Container'
+import SuggestionForm from '@/module/form/SuggestionForm/Container'
 
 import './style.scss'
 
@@ -34,6 +36,7 @@ export default class extends StandardPage {
 
         // we use the props from the redux store if its retained
         this.state = {
+            showForm: false,
             showMobile: false,
             sortBy: sortBy.likesNum,
             page: 1,
@@ -74,10 +77,33 @@ export default class extends StandardPage {
             </div>
         )
     }
+    renderEditForm() {
+        return (
+            <Modal
+                className="project-detail-nobar"
+                visible={this.state.showForm}
+                onOk={this.showCreateForm}
+                onCancel={this.showCreateForm}
+                footer={null}
+                width="70%"
+            >
+                { this.state.showForm &&
+                    <SuggestionForm showCreateForm={this.showCreateForm}/>
+                }
+            </Modal>
+        )
+    }
+    showCreateForm = () => {
+        this.setState({
+            showForm: !this.state.showForm
+        })
+    }
+
     renderHeader() {
         return <div className='title'>{I18N.get('suggestion.title').toUpperCase()}</div>
     }
     renderFilter() {
+        // refer to UserEditForm
         return (
             <Tabs defaultActiveKey='1' onChange={this.onSortByChanged.bind(this)}>
                 <TabPane tab='likesNum' key='likesNum'>Content of Tab Pane 1</TabPane>
@@ -91,7 +117,7 @@ export default class extends StandardPage {
         // TODO: use modal to create
         return (
             <div className="pull-right filter-group btn-create-suggestion">
-                <Button onClick={() => this.props.history.push('/suggestion/create/')}>
+                <Button onClick={this.showCreateForm}>
                     {I18N.get('suggestion.add')}
                 </Button>
             </div>
