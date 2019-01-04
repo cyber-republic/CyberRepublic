@@ -12,6 +12,7 @@
   },
   "author": "liyangwood@gmail.com",
   "dependencies": {
+    "@svgr/webpack": "^4.1.0",
     "antd": "3.8.0",
     "babel-preset-stage-0": "^6.24.1",
     "bluebird": "^3.5.1",

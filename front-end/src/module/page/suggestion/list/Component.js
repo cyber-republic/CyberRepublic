@@ -14,6 +14,12 @@ import Navigator from '@/module/page/shared/HomeNavigator/Container'
 import MySuggestion from '../my_list/Container'
 import SuggestionForm from '@/module/form/SuggestionForm/Container'
 
+import { ReactComponent as LikeIcon } from '@/assets/images/icon-like.svg'
+import { ReactComponent as DislikeIcon } from '@/assets/images/icon-dislike.svg'
+import { ReactComponent as CommentIcon } from '@/assets/images/icon-comment.svg'
+import { ReactComponent as FollowIcon } from '@/assets/images/icon-follow.svg'
+import { ReactComponent as FlagIcon } from '@/assets/images/icon-flag.svg'
+
 import './style.scss'
 
 const TabPane = Tabs.TabPane
@@ -37,6 +43,7 @@ export default class extends StandardPage {
         // we use the props from the redux store if its retained
         this.state = {
             showForm: false,
+            isDropdownActionOpen: false,
             showMobile: false,
             sortBy: sortBy.likesNum,
             page: 1,
@@ -66,6 +73,7 @@ export default class extends StandardPage {
         const listNode = this.renderList()
         const mySuggestionNode = this.renderMySuggestion()
         const paginationNode = this.renderPagination()
+        const createForm = this.renderCreateForm()
         return (
             <div className='p-suggestion'>
                 {headerNode}
@@ -74,10 +82,11 @@ export default class extends StandardPage {
                 {listNode}
                 {mySuggestionNode}
                 {paginationNode}
+                {createForm}
             </div>
         )
     }
-    renderEditForm() {
+    renderCreateForm() {
         return (
             <Modal
                 className="project-detail-nobar"
@@ -128,41 +137,75 @@ export default class extends StandardPage {
         const listData = _.map(suggestionsList, data => ({
             href: `/suggestion/detail/${data._id}`,
             title: data.title,
-            content: data.desc // TODO: limited length
+            content: data.desc, // TODO: limited length
+            createdAt: data.createdAt,
+            author: `${_.get(data, 'createdBy.profile.firstName')} ${_.get(data, 'createdBy.profile.lastName')}`,
+            likesNum: data.likesNum,
+            dislikesNum: data.dislikesNum,
+            commentsNum: data.commentsNum || 0,
+            views: data.views || 0
         }))
-        const IconText = ({ type, text }) => (
-            <span>
-                <Icon type={type} style={{ marginRight: 8 }} />
-                {text}
-            </span>
-        );
-        const actions = [
-            <IconText type='like-o' text='156' />,
-            <IconText type='dislike-o' text='156' />,
-            <IconText type='comment' text='2' />
-        ]
+        const IconText = ({ component, type, text }) => {
+            return type ? (
+                <span>
+                    <Icon type={type} style={{marginLeft: 8}} />
+                    {text}
+                </span>
+            ) : (
+                <span>
+                    {component}
+                    {text}
+                </span>
+
+            )
+        }
+        const getActions = ({ likesNum, dislikesNum, commentsNum, views }) => {
+            const dropdownActions = this.state.isDropdownActionOpen && (
+                <div>
+                    <div><IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} /></div>
+                    <div><IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} /></div>
+                </div>
+            )
+            return ([
+                <IconText component={<LikeIcon />} text={likesNum} />,
+                <IconText component={<DislikeIcon />} text={dislikesNum} />,
+                <IconText component={<CommentIcon />} text={commentsNum} />,
+                <Icon type={'ellipsis'} style={{ marginRight: 8 }} onClick={this.showDropdownActions} />,
+                dropdownActions,
+                <span>{views} {I18N.get('suggestion.views').toLowerCase()}</span>
+            ])
+        }
+        const renderItem = item => (
+            <List.Item
+                key={item.title}
+                actions={getActions(item)}
+            >
+                <List.Item.Meta
+                    title={<a href={item.href}>{item.title}</a>}
+                    description = {
+                        `${I18N.get('suggestion.postedBy')} ${item.author} ${item.createdAt}`
+                    }
+                />
+                {item.content}
+            </List.Item>
+        )
         return <List
             itemLayout='vertical'
             pagination={{
                 onChange: (page) => {
-                    console.log(page);
+                    console.log(page)
+                    this.loadPage(page)
                 },
                 pageSize: 5
             }}
             dataSource={listData}
-            renderItem={item => (
-                <List.Item
-                    key={item.title}
-                    actions={actions}
-                >
-                    <List.Item.Meta
-                        title={<a href={item.href}>{item.title}</a>}
-                        // description={item.desc}
-                    />
-                    {item.content}
-                </List.Item>
-            )}
+            renderItem={renderItem}
         />
+    }
+    showDropdownActions = () => {
+        this.setState({
+            isDropdownActionOpen: !this.state.isDropdownActionOpen
+        })
     }
     renderMySuggestion() {
         return <MySuggestion />

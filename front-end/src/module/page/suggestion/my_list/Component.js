@@ -7,10 +7,9 @@ import {
     Button
 } from 'antd';
 import I18N from '@/I18N'
-import StandardPage from '../../StandardPage';
 import Footer from '@/module/layout/Footer/Container'
 import Navigator from '@/module/page/shared/HomeNavigator/Container'
-import MySuggestion from '../my_list/Container'
+import BaseComponent from '@/model/BaseComponent'
 
 import './style.scss'
 
@@ -28,25 +27,20 @@ const sortBy = {
  * This uses new features such as infinite scroll and pagination, therefore
  * we do some different things such as only loading the data from the server
  */
-export default class extends StandardPage {
+export default class extends BaseComponent {
     constructor(props) {
         super(props)
 
         // we use the props from the redux store if its retained
         this.state = {
             showMobile: false,
-            sortBy: sortBy.likesNum,
+            sortBy: sortBy.createdAt,
             page: 1,
-            results: 10,
-            search: ''
+            results: 10
         }
-
-        this.debouncedLoadMore = _.debounce(this.loadMore.bind(this), 300)
-        this.debouncedRefetch = _.debounce(this.refetch.bind(this), 300)
     }
 
     componentDidMount() {
-        super.componentDidMount()
         this.refetch()
     }
 
@@ -54,46 +48,19 @@ export default class extends StandardPage {
         this.props.resetAll()
     }
 
-    ord_renderContent() {
+    ord_render() {
+        if (!this.props.currentUserId) return null
         const headerNode = this.renderHeader()
-        const filterNode = this.renderFilter()
-        const addButtonNode = this.renderAddButton()
         const listNode = this.renderList()
-        const mySuggestionNode = this.renderMySuggestion()
-        const paginationNode = this.renderPagination()
         return (
             <div className='p-suggestion'>
                 {headerNode}
-                {filterNode}
-                {addButtonNode}
                 {listNode}
-                {mySuggestionNode}
-                {paginationNode}
             </div>
         )
     }
     renderHeader() {
-        return <div className='title'>{I18N.get('suggestion.title').toUpperCase()}</div>
-    }
-    renderFilter() {
-        return (
-            <Tabs defaultActiveKey='1' onChange={this.onSortByChanged.bind(this)}>
-                <TabPane tab='likesNum' key='likesNum'>Content of Tab Pane 1</TabPane>
-                <TabPane tab='views' key='views'>Content of Tab Pane 2</TabPane>
-                <TabPane tab='activeness' key='activeness'>Content of Tab Pane 3</TabPane>
-                <TabPane tab='createdAt' key='createdAt'>Content of Tab Pane 3</TabPane>
-            </Tabs>
-        )
-    }
-    renderAddButton() {
-        // TODO: use modal to create
-        return (
-            <div className="pull-right filter-group btn-create-suggestion">
-                <Button onClick={() => this.props.history.push('/suggestion/create/')}>
-                    {I18N.get('suggestion.add')}
-                </Button>
-            </div>
-        )
+        return <div className='view-all-link' onClick={this.goToProfile}>{I18N.get('suggestion.viewAll')}</div>
     }
     renderList() {
         const suggestionsList = this.props.all_suggestions;
@@ -136,23 +103,6 @@ export default class extends StandardPage {
             )}
         />
     }
-    renderMySuggestion() {
-        return <MySuggestion />
-    }
-    renderPagination() {
-        // TODO: loadMore, loadPage
-        return <div className='pagination'>Pagination</div>
-    }
-    // onSortByChanged
-    onSortByChanged(sortBy) {
-        console.log('sortBy is: ', sortBy)
-        this.setState({
-            sortBy
-        }, this.refetch.bind(this))
-    }
-    // fetchData
-    // fetchDataByPage
-
     /**
      * Builds the query from the current state
      */
@@ -161,6 +111,10 @@ export default class extends StandardPage {
 
         if (this.state.sortBy) {
             query.sortBy = this.state.sortBy
+        }
+        
+        if (this.props.currentUserId) {
+            query.createdBy = this.props.currentUserId
         }
 
         query.page = this.state.page || 1
@@ -177,51 +131,7 @@ export default class extends StandardPage {
         this.props.getSuggestions(query)
     }
 
-    async loadMore() {
-        const page = this.state.page + 1
-
-        const query = {
-            ...this.getQuery(),
-            page,
-            results: this.state.results
-        }
-
-        this.setState({ loadingMore: true })
-
-        try {
-            await this.props.loadMoreSuggestions(query)
-            this.setState({ page })
-        } catch (e) {
-            // Do not update page in state if the call fails
-        }
-
-        this.setState({ loadingMore: false })
-    }
-
-    async loadPage(page) {
-        const query = {
-            ...this.getQuery(),
-            page,
-            results: this.state.results
-        }
-
-        this.setState({ loadingMore: true })
-
-        try {
-            await this.props.loadMoreSuggestions(query)
-            this.setState({ page })
-        } catch (e) {
-            // Do not update page in state if the call fails
-        }
-
-        this.setState({ loadingMore: false })
-    }
-
-    hasMoreSuggestions() {
-        return _.size(this.props.all_suggestions) < this.props.all_suggestions_total
-    }
-
-    linkSuggestionDetail(suggestionId) {
-        this.props.history.push(`/suggestion/detail/${suggestionId}`)
+    goToProfile = () => {
+        this.props.history.push(`/profile/suggestion/list`)
     }
 }
