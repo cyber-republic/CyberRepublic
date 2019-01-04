@@ -26,7 +26,7 @@ const TabPane = Tabs.TabPane
 
 const sortBy = {
     likesNum: 'likesNum',
-    views: 'views',
+    viewsNum: 'viewsNum',
     activeness: 'activeness',
     createdAt: 'createdAt'
 
@@ -135,7 +135,7 @@ export default class extends StandardPage {
     renderList() {
         const suggestionsList = this.props.all_suggestions;
         const listData = _.map(suggestionsList, data => ({
-            href: `/suggestion/detail/${data._id}`,
+            href: `/suggestion/${data._id}`,
             title: data.title,
             content: data.desc, // TODO: limited length
             createdAt: data.createdAt,
@@ -143,7 +143,9 @@ export default class extends StandardPage {
             likesNum: data.likesNum,
             dislikesNum: data.dislikesNum,
             commentsNum: data.commentsNum || 0,
-            views: data.views || 0
+            viewsNum: data.viewsNum || 0,
+            _id: data._id,
+            displayId: data.displayId
         }))
         const IconText = ({ component, type, text }) => {
             return type ? (
@@ -159,11 +161,11 @@ export default class extends StandardPage {
 
             )
         }
-        const getActions = ({ likesNum, dislikesNum, commentsNum, views }) => {
+        const getActions = ({ likesNum, dislikesNum, commentsNum, viewsNum, _id }) => {
             const dropdownActions = this.state.isDropdownActionOpen && (
                 <div>
-                    <div><IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} /></div>
-                    <div><IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} /></div>
+                    <div onClick={() => this.props.subscribe(_id)}><IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} /></div>
+                    <div onClick={() => this.props.reportAbuse(_id)}><IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} /></div>
                 </div>
             )
             return ([
@@ -172,7 +174,7 @@ export default class extends StandardPage {
                 <IconText component={<CommentIcon />} text={commentsNum} />,
                 <Icon type={'ellipsis'} style={{ marginRight: 8 }} onClick={this.showDropdownActions} />,
                 dropdownActions,
-                <span>{views} {I18N.get('suggestion.views').toLowerCase()}</span>
+                <span>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</span>
             ])
         }
         const renderItem = item => (
@@ -183,7 +185,7 @@ export default class extends StandardPage {
                 <List.Item.Meta
                     title={<a href={item.href}>{item.title}</a>}
                     description = {
-                        `${I18N.get('suggestion.postedBy')} ${item.author} ${item.createdAt}`
+                        `#${item.displayId} ${I18N.get('suggestion.postedBy')} ${item.author} ${item.createdAt}`
                     }
                 />
                 {item.content}
@@ -293,6 +295,6 @@ export default class extends StandardPage {
     }
 
     linkSuggestionDetail(suggestionId) {
-        this.props.history.push(`/suggestion/detail/${suggestionId}`)
+        this.props.history.push(`/suggestion/${suggestionId}`)
     }
 }

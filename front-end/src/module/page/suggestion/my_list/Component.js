@@ -17,7 +17,7 @@ const TabPane = Tabs.TabPane
 
 const sortBy = {
     likesNum: 'likesNum',
-    views: 'views',
+    viewsNum: 'viewsNum',
     activeness: 'activeness',
     createdAt: 'createdAt'
 
@@ -65,7 +65,7 @@ export default class extends BaseComponent {
     renderList() {
         const suggestionsList = this.props.all_suggestions;
         const listData = _.map(suggestionsList, data => ({
-            href: `/suggestion/detail/${data._id}`,
+            href: `/suggestion/${data._id}`,
             title: data.title,
             content: data.desc // TODO: limited length
         }))
