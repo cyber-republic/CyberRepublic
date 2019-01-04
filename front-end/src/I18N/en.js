@@ -30,6 +30,7 @@ const en = {
     '0109': 'Submissions',
     '0110': 'Blog',
     'navigation.programs': 'Programs',
+    'navagation.suggestion': 'Suggestions',
 
     '0200': 'Profile',
     '0201': 'Login',
@@ -64,6 +65,7 @@ const en = {
     '1304': 'Issues',
     '1305': 'Forms',
     '1306': 'Projects',
+    'admin.suggestion': 'Suggestions',
 
     // Profile navigator
     '2300': 'My Profile',
@@ -73,6 +75,7 @@ const en = {
     '2304': 'My Communities',
     '2305': 'My Projects',
     '2306': 'Communities',
+    'profile.suggestion': 'My Suggestions',
 
     'login.success': 'Login Successful',
 
@@ -193,6 +196,35 @@ const en = {
     'user.edit.form.section.social': 'Social',
     'user.follow': 'Follow',
     'user.unfollow': 'Unfollow',
+
+    // suggestion
+    'suggestion.title': 'Suggestions',
+    'suggestion.add': 'Add a Suggestion',
+    'suggestion.sort': 'Sort by',
+    'suggestion.likes': 'Likes',
+    'suggestion.views': 'Views',
+    'suggestion.activeness': 'Activeness',
+    'suggestion.dateAdded': 'Date Added',
+    'suggestion.postedBy': 'Posted By',
+    'suggestion.follow': 'follow',
+    'suggestion.reportAbuse': 'Report Abuse',
+    'suggestion.translate': 'Translate to English',
+    'suggestion.councilMember': 'Council Member',
+    'suggestion.cancel': 'Cancel',
+    'suggestion.submit': 'Submit',
+    'suggestion.copy': 'COPY',
+    'suggestion.back': 'Back',
+    'suggestion.viewAll': 'View All',
+    'suggestion.mySuggestions': 'My Suggestions',
+    'suggestion.all': 'All',
+    'suggestion.addedByMe': 'Added by me',
+    'suggestion.commentedByMe': 'Commented by me',
+    'suggestion.followed': 'Followed',
+    'suggestion.summary': 'Summary',
+    'suggestion.dislikes': 'Dislikes',
+    'suggestion.created': 'Created',
+    'suggestion.archived': 'Archived',
+    'suggestion.search': 'Search',
 
     // Developer
     'developer.breadcrumb.developers': 'Community',
