@@ -29,7 +29,9 @@ export default class extends Base {
     // TODO: sort by likes, created, activeness
     // db.list
     console.log(param)
-    const cursor = this.model.getDBInstance().find(_.omit(param, ['results', 'page', 'sortBy', 'sortOrder']))
+    const cursor = this.model.getDBInstance()
+      .find(_.omit(param, ['results', 'page', 'sortBy', 'sortOrder']))
+      .populate('createdBy', constant.DB_SELECTED_FIELDS.USER.NAME)
 
     if (param.sortBy) {
       const sortObject = {}
@@ -44,7 +46,6 @@ export default class extends Base {
     }
 
     const result = await cursor
-      // .populate('createdBy', constant.DB_EXCLUDED_FIELDS.USER)
     return result
   }
 
