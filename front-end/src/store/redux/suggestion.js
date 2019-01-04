@@ -4,23 +4,23 @@ export const FETCH_SUGGESTION_BEGIN = 'FETCH_SUGGESTION_BEGIN'
 export const FETCH_SUGGESTION_SUCCESS = 'FETCH_SUGGESTION_SUCCESS'
 export const FETCH_SUGGESTION_FAILURE = 'FETCH_SUGGESTION_FAILURE'
 
-class SuggestioinRedux extends BaseRedux {
+class SuggestionRedux extends BaseRedux {
 
     defineTypes () {
-        return ['suggestioin']
+        return ['suggestion']
     }
 
     defineDefaultState() {
         return {
-            active_suggestioin: null,
+            active_suggestion: null,
 
             loading: false,
 
             create_form: {
             },
 
-            all_suggestioins: [],
-            all_suggestioins_total: 0,
+            all_suggestions: [],
+            all_suggestions_total: 0,
 
             // if we select a detail
             detail: {},
@@ -30,4 +30,4 @@ class SuggestioinRedux extends BaseRedux {
     }
 }
 
-export default new SuggestioinRedux()
+export default new SuggestionRedux()
