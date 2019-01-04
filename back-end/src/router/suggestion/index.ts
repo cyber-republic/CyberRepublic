@@ -6,6 +6,7 @@ import like from './like'
 import dislike from './dislike'
 import reportabuse from './reportabuse'
 import subscribe from './subscribe'
+import unsubscribe from './unsubscribe'
 import comment from './comment'
 import abuse from './abuse'
 import archive from './archive'
@@ -23,47 +24,52 @@ export default Base.setRouter([
     method: 'get',
   },
   {
-    path: '/show',
+    path: '/:id',
     router: show,
     method: 'get',
   },
   {
-    path: '/like',
+    path: '/:id/like',
     router: like,
     method: 'post',
   },
   {
-    path: '/dislike',
+    path: '/:id/dislike',
     router: dislike,
     method: 'post',
   },
   {
-    path: '/reportabuse',
+    path: '/:id/reportabuse',
     router: reportabuse,
     method: 'post',
   },
   {
-    path: '/subscribe',
-    router: subscribe,
-    method: 'post',
+    path : '/:id/comment',
+    router : comment,
+    method : 'post'
   },
   {
-    path: '/comment',
-    router: comment,
-    method: 'post',
+    path : '/:id/subscribe',
+    router : subscribe,
+    method : 'post'
   },
   {
-    path: '/abuse',
+    path : '/:id/unsubscribe',
+    router : unsubscribe,
+    method : 'post'
+  },
+  {
+    path: '/:id/abuse',
     router: abuse,
     method: 'post',
   },
   {
-    path: '/archive',
+    path: '/:id/archive',
     router: archive,
     method: 'post',
   },
   {
-    path: '/delete',
+    path: '/:id/delete',
     router: del,
     method: 'post',
   },

@@ -6,7 +6,7 @@ export default class extends Base{
 
     public async action(){
         const commentService = this.buildService(CommentService);
-        const rs = await commentService.subscribe('Suggestion', this.getParam());
+        const rs = await commentService.unsubscribe('Suggestion', this.getParam());
         return this.result(1, rs);
     }
 }
