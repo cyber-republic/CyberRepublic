@@ -13,7 +13,7 @@ export default class extends Base {
     const schema = super.buildSchema();
     const options = {
       model: this.getName(),
-      field: 'disPlayId',
+      field: 'displayId',
       startAt: 1,
     }
     schema.plugin(autoIncrement, options);

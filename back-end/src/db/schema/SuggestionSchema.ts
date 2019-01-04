@@ -33,7 +33,7 @@ export const Suggestion = {
         type: Number,
         default: 0,
     },
-    views: {
+    viewsNum: {
         type: Number,
         default: 0
     },
