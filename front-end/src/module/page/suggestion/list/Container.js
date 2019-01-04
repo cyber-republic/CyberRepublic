@@ -35,8 +35,8 @@ const mapDispatch = () => {
             })
         },
 
-        resetSuggestions() {
-            return suggestionService.resetAllSuggestions()
+        resetAll() {
+            return suggestionService.resetAll()
         }
     }
 }

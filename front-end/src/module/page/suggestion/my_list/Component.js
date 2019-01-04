@@ -55,8 +55,6 @@ export default class extends StandardPage {
     }
 
     ord_renderContent() {
-        const { all_suggestions: dataList, all_suggestions_total: total } = this.props;
-        console.log(dataList, total)
         const headerNode = this.renderHeader()
         const filterNode = this.renderFilter()
         const addButtonNode = this.renderAddButton()
