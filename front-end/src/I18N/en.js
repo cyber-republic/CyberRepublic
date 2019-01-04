@@ -208,7 +208,7 @@ const en = {
     'suggestion.postedBy': 'Posted By',
     'suggestion.follow': 'follow',
     'suggestion.reportAbuse': 'Report Abuse',
-    'suggestion.translate': 'Translate to English',
+    'suggestion.translate': 'Translate in English',
     'suggestion.councilMember': 'Council Member',
     'suggestion.copy': 'COPY',
     'suggestion.back': 'Back',

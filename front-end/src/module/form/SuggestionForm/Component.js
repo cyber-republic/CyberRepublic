@@ -31,18 +31,24 @@ import './style.scss'
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
 
+// TOTO: add mention module
+// https://github.com/afconsult/quill-mention
+
 class C extends BaseComponent {
     constructor (props) {
         super(props)
 
         this.state = {
+            isTranslateModalOpen: false
         }
+    }
+    componentDidMount() {
+        // TOTO: get council members used for mentions
     }
 
     handleSubmit (e) {
         e.preventDefault()
 
-        const tags = this.props.form.getFieldInstance('tags').getValue()
         this.props.form.validateFields(async (err, values) => {
             if (!err) {
                 if (_.isEmpty(values.description)) {
@@ -81,8 +87,7 @@ class C extends BaseComponent {
     }
 
     getInputProps () {
-        const {getFieldDecorator} = this.props.form
-        const existingTeam = this.props.existingTeam
+        const { getFieldDecorator } = this.props.form
 
         const input_el = (
             <Input size='large'/>
@@ -116,8 +121,33 @@ class C extends BaseComponent {
         }
     }
 
-    handleCancel() {
-        this.setState({ previewVisible: false })
+    translate = () => {
+        console.log('translate: ', this.props.form.getFieldsValue(['title', 'description']));
+    }
+    renderTranslationModal() {
+        const { isTranslateModalOpen } = this.state
+        if (!isTranslateModalOpen) return null
+        const values = this.props.form.getFieldsValue(['title', 'description'])
+        let translation = 'Translating...'
+        // TODO: translation
+        // translation =
+        return (
+            <Modal
+                className="translate-modal-container"
+                visible={this.state.isTranslateModalOpen}
+                onOk={this.showTranslate}
+                onCancel={this.showCreateForm}
+                footer={null}
+                width="70%"
+            >
+                {translation}
+            </Modal>
+        )
+    }
+    showTranslate = () => {
+        this.setState({
+            showTranslate: !this.state.isTranslateModalOpen
+        })
     }
 
     ord_render () {
@@ -152,12 +182,14 @@ class C extends BaseComponent {
                 </FormItem>
             </div>
         )
-
+        const translationModal = this.renderTranslationModal()
         return (
             <div className='c_SuggestionForm'>
                 <Form onSubmit={this.handleSubmit.bind(this)} className='d_SuggestionForm'>
                     {formContent}
                 </Form>
+                <div onClick={this.showTranslate}>{I18N.get('suggestion.translate')}</div>
+                {translationModal}
             </div>
         )
     }
