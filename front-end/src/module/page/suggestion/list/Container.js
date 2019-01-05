@@ -30,6 +30,13 @@ const mapDispatch = () => {
             })
         },
 
+        async getMySuggestions(query) {
+            return service.myList({
+                status: SUGGESTION_STATUS.ACTIVE,
+                ...query
+            })
+        },
+
         async loadMoreSuggestions(query) {
             return service.loadMore({
                 status: SUGGESTION_STATUS.ACTIVE,

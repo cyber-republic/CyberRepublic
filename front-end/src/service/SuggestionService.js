@@ -48,6 +48,33 @@ export default class extends BaseService {
 
         return result
     }
+    async myList(qry) {
+        const selfRedux = this.store.getRedux('suggestion')
+
+        this.dispatch(selfRedux.actions.loading_update(true))
+
+        const path = '/api/suggestion/list'
+        // this.abortFetch(path)
+
+        let result
+        try {
+            result = await api_request({
+                path,
+                method: 'get',
+                data: qry,
+                signal: this.getAbortSignal(path)
+            })
+
+            this.dispatch(selfRedux.actions.loading_update(false))
+            this.dispatch(selfRedux.actions.my_suggestions_reset())
+            this.dispatch(selfRedux.actions.my_suggestions_total_update(result.total))
+            this.dispatch(selfRedux.actions.my_suggestions_update(_.values(result.list)))
+        } catch (e) {
+            // Do nothing
+        }
+
+        return result
+    }
     resetAll() {
         const selfRedux = this.store.getRedux('suggestion')
         this.dispatch(selfRedux.actions.all_suggestions_reset())

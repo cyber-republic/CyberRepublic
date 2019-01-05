@@ -57,7 +57,9 @@ export default class extends StandardPage {
 
     componentDidMount() {
         super.componentDidMount()
+        const { currentUserId } = this.props
         this.refetch()
+        this.props.getMySuggestions({ createdBy: currentUserId, results: 5 })
     }
 
     componentWillUnmount() {
@@ -179,7 +181,7 @@ export default class extends StandardPage {
         }
         const renderItem = item => (
             <List.Item
-                key={item.title}
+                key={item._id}
                 actions={getActions(item)}
             >
                 <List.Item.Meta
