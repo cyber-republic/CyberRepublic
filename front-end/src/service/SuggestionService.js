@@ -113,52 +113,52 @@ export default class extends BaseService {
         return result
     }
 
-    async like(_id) {
+    async like(id) {
         const res = await api_request({
-            path: `/api/suggestion/${_id}/like`,
+            path: `/api/suggestion/${id}/like`,
             method: 'post'
         })
 
         return res
     }
-    async dislike(_id) {
+    async dislike(id) {
         const res = await api_request({
-            path: `/api/suggestion/${_id}/dislike`,
+            path: `/api/suggestion/${id}/dislike`,
             method: 'post'
         })
 
         return res
     }
-    async reportAbuse(_id) {
+    async reportAbuse(id) {
         const res = await api_request({
-            path: `/api/suggestion/${_id}/reportabuse`,
-            method: 'post'
-        })
-
-        return res
-    }
-    // ADMIN ONLY
-    async abuse(_id) {
-        const res = await api_request({
-            path: `/api/suggestion/${_id}/abuse`,
+            path: `/api/suggestion/${id}/reportabuse`,
             method: 'post'
         })
 
         return res
     }
     // ADMIN ONLY
-    async archive(_id) {
+    async abuse(id) {
         const res = await api_request({
-            path: `/api/suggestion/${_id}/archive`,
+            path: `/api/suggestion/${id}/abuse`,
             method: 'post'
         })
 
         return res
     }
     // ADMIN ONLY
-    async delete(_id) {
+    async archive(id) {
         const res = await api_request({
-            path: `/api/suggestion/${_id}/delete`,
+            path: `/api/suggestion/${id}/archive`,
+            method: 'post'
+        })
+
+        return res
+    }
+    // ADMIN ONLY
+    async delete(id) {
+        const res = await api_request({
+            path: `/api/suggestion/${id}/delete`,
             method: 'post'
         })
 

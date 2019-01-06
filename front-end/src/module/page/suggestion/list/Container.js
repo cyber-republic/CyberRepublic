@@ -52,15 +52,15 @@ const mapDispatch = () => {
             return service.create(doc)
         },
 
-        async reportAbuse(_id) {
-            return service.reportAbuse(_id)
+        async reportAbuse(id) {
+            return service.reportAbuse(id)
         },
-        async subscribe(_id) {
-            return commentService.subscribe('suggestion', _id)
+        async subscribe(id) {
+            return commentService.subscribe('suggestion', id)
         },
 
-        async unsubscribe(_id) {
-            return commentService.unsubscribe('suggestion', _id)
+        async unsubscribe(id) {
+            return commentService.unsubscribe('suggestion', id)
         }
     }
 }
