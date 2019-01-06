@@ -12,7 +12,6 @@ import StandardPage from '../../StandardPage';
 import Footer from '@/module/layout/Footer/Container'
 import Navigator from '@/module/page/shared/HomeNavigator/Container'
 import MySuggestion from '../my_list/Container'
-// import SuggestionForm from '@/module/form/TeamCreateForm/Container'
 import SuggestionForm from '@/module/form/SuggestionForm/Container'
 
 import { ReactComponent as LikeIcon } from '@/assets/images/icon-like.svg'
