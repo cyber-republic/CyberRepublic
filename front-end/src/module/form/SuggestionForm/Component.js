@@ -20,11 +20,8 @@ import {
     Modal
 } from 'antd'
 import I18N from '@/I18N'
-import InputTags from '@/module/shared/InputTags/Component'
 import ReactQuill from 'react-quill'
 import { TOOLBAR_OPTIONS } from '@/config/constant'
-import {TEAM_TASK_DOMAIN, SKILLSET_TYPE} from '@/constant'
-import {upload_file} from '@/util'
 import sanitizeHtml from 'sanitize-html'
 import './style.scss'
 
@@ -103,16 +100,18 @@ class C extends BaseComponent {
 
         const title_fn = getFieldDecorator('title', {
             rules: [
-                {required: true, message: I18N.get('team.create.error.titleRequired')},
-                {min: 4, message: I18N.get('team.create.error.titleTooShort')}
-            ]
+                {required: true, message: I18N.get('suggestion.create.error.titleRequired')},
+                {min: 4, message: I18N.get('suggestion.create.error.titleTooShort')}
+            ],
+            initialValue: ''
         })
 
         const description_fn = getFieldDecorator('description', {
             rules: [
-                {required: true, message: I18N.get('team.create.error.descriptionRequired')},
-                {min: 4, message: I18N.get('team.create.error.descriptionTooShort')}
-            ]
+                {required: true, message: I18N.get('suggestion.create.error.descriptionRequired')},
+                {min: 4, message: I18N.get('suggestion.create.error.descriptionTooShort')}
+            ],
+            initialValue: ''
         })
 
         return {
