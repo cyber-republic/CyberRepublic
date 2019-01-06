@@ -93,9 +93,67 @@ export default class extends BaseService {
 
         return res
     }
+    async get(suggestionId) {
+        const suggestionRedux = this.store.getRedux('suggestion')
+        this.dispatch(suggestionRedux.actions.loading_update(true))
+
+        const result = await api_request({
+            path: `/api/suggestion/${suggestionId}`,
+            method: 'get'
+        })
+
+        this.dispatch(suggestionRedux.actions.loading_update(false))
+        this.dispatch(suggestionRedux.actions.detail_update(result))
+
+        return result
+    }
+
+    async like(_id) {
+        const res = await api_request({
+            path: `/api/suggestion/${_id}/like`,
+            method: 'post'
+        })
+
+        return res
+    }
+    async dislike(_id) {
+        const res = await api_request({
+            path: `/api/suggestion/${_id}/dislike`,
+            method: 'post'
+        })
+
+        return res
+    }
     async reportAbuse(_id) {
         const res = await api_request({
             path: `/api/suggestion/${_id}/reportabuse`,
+            method: 'post'
+        })
+
+        return res
+    }
+    // ADMIN ONLY
+    async abuse(_id) {
+        const res = await api_request({
+            path: `/api/suggestion/${_id}/abuse`,
+            method: 'post'
+        })
+
+        return res
+    }
+    // ADMIN ONLY
+    async archive(_id) {
+        const res = await api_request({
+            path: `/api/suggestion/${_id}/archive`,
+            method: 'post'
+        })
+
+        return res
+    }
+    // ADMIN ONLY
+    async delete(_id) {
+        const res = await api_request({
+            path: `/api/suggestion/${_id}/delete`,
             method: 'post'
         })
 
