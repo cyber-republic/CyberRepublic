@@ -42,10 +42,10 @@ export const Suggestion = {
         default: 0
     },
     comments: [[CommentSchema]],
-    commentsNum: {
-        type: Number,
-        default: 0,
-    },
+    // commentsNum: {
+    //     type: Number,
+    //     default: 0,
+    // },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -65,8 +65,8 @@ export const Suggestion = {
         enum: _.keys(constant.SUGGESTION_ABUSED_STATUS)
     },
     subscribers: [SubscriberSchema],
-    subscribersNum: {
-        type: Number,
-        default: 0,
-    },
+    // subscribersNum: {
+    //     type: Number,
+    //     default: 0,
+    // },
 }
