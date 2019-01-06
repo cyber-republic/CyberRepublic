@@ -79,6 +79,11 @@ export default class extends BaseService {
         const selfRedux = this.store.getRedux('suggestion')
         this.dispatch(selfRedux.actions.all_suggestions_reset())
     }
+    resetDetail() {
+        const selfRedux = this.store.getRedux('suggestion')
+        this.dispatch(selfRedux.actions.detail_reset())
+    }
+
     async create(doc) {
         const selfRedux = this.store.getRedux('suggestion')
         this.dispatch(selfRedux.actions.loading_update(true))
@@ -93,17 +98,17 @@ export default class extends BaseService {
 
         return res
     }
-    async get(suggestionId) {
-        const suggestionRedux = this.store.getRedux('suggestion')
-        this.dispatch(suggestionRedux.actions.loading_update(true))
+    async getDetail(id) {
+        const selfRedux = this.store.getRedux('suggestion')
+        this.dispatch(selfRedux.actions.loading_update(true))
 
         const result = await api_request({
-            path: `/api/suggestion/${suggestionId}`,
+            path: `/api/suggestion/${id}`,
             method: 'get'
         })
 
-        this.dispatch(suggestionRedux.actions.loading_update(false))
-        this.dispatch(suggestionRedux.actions.detail_update(result))
+        this.dispatch(selfRedux.actions.loading_update(false))
+        this.dispatch(selfRedux.actions.detail_update(result))
 
         return result
     }

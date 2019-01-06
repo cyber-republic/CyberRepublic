@@ -243,7 +243,7 @@ export default [
         path: '/suggestion',
         page: SuggestionListPage
     }, {
-        path: '/council/detail/:id',
+        path: '/suggestion/:id',
         page: SuggestionDetailPage
     },
 
