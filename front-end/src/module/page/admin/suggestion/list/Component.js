@@ -116,7 +116,7 @@ export default class extends ProfilePage {
                 // width: '50%',
                 className: 'fontWeight500 allow-wrap',
                 render: (title, data) => {
-                    return <a onClick={this.linkSuggestionDetail} className="tableLink">{title}</a>
+                    return <a onClick={() => this.linkSuggestionDetail(data._id)} className="tableLink">{title}</a>
                 }
             },
             {
