@@ -17,7 +17,7 @@ export default class extends Base {
     const param = this.getParam()
 
     if (param.search) {
-      param.name = { $regex: _.trim(param.search), $options: 'i' }
+      param.title = { $regex: _.trim(param.search), $options: 'i' }
     }
 
     const list = await service.list(_.omit(param, ['search']))
