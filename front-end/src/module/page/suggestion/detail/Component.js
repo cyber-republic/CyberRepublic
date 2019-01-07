@@ -124,18 +124,18 @@ export default class extends StandardPage {
         }
         const getActions = ({ likesNum, dislikesNum, commentsNum, viewsNum, _id }) => {
             const dropdownActions = this.state.isDropdownActionOpen && (
-                <div>
+                <div key={1}>
                     <div onClick={() => this.props.subscribe(_id)}><IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} /></div>
                     <div onClick={() => this.props.reportAbuse(_id)}><IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} /></div>
                 </div>
             )
             return ([
-                <IconText component={<LikeIcon />} text={likesNum} />,
-                <IconText component={<DislikeIcon />} text={dislikesNum} />,
-                <IconText component={<CommentIcon />} text={commentsNum} />,
-                <Icon type={'ellipsis'} style={{ marginRight: 8 }} onClick={this.showDropdownActions} />,
+                <IconText component={<LikeIcon />} text={likesNum} key={2} />,
+                <IconText component={<DislikeIcon />} text={dislikesNum} key={3} />,
+                <IconText component={<CommentIcon />} text={commentsNum} key={4} />,
+                <Icon type={'ellipsis'} style={{ marginRight: 8 }} onClick={this.showDropdownActions} key={5} />,
                 dropdownActions,
-                <span>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</span>
+                <span key={6}>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</span>
             ])
         }
         return getActions(detail)
