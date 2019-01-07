@@ -39,15 +39,17 @@ export default class extends StandardPage {
     }
 
     ord_renderContent() {
-        const { all_suggestions: dataList, all_suggestions_total: total } = this.props;
-        console.log(dataList, total)
         const headerNode = this.renderHeader()
         const detailNode = this.renderDetail()
+        const translationBtn = this.renderTranslationBtn()
+        const actionsNode = this.renderActionsNode()
         const commentNode = this.renderCommentNode()
         return (
             <div className='p-suggestion'>
                 {headerNode}
                 {detailNode}
+                {translationBtn}
+                {actionsNode}
                 {commentNode}
             </div>
         )
@@ -70,15 +72,11 @@ export default class extends StandardPage {
         const metaNode = this.renderMetaNode()
         const titleNode = this.renderTitleNode()
         const descNode = this.renderDescNode()
-        const translationBtn = this.renderTranslationBtn()
-        const actionsNode = this.renderActionsNode()
         return (
             <div>
                 {metaNode}
                 {titleNode}
                 {descNode}
-                {translationBtn}
-                {actionsNode}
             </div>
         )
     }
