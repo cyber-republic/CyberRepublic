@@ -1,6 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 import MediaQuery from 'react-responsive'
+import { Col, Row, Input, Select, Button, Table } from 'antd'
+import moment from 'moment/moment'
 import I18N from '@/I18N'
 import ProfilePage from '@/module/page/ProfilePage'
 import Footer from '@/module/layout/Footer/Container'
@@ -8,11 +10,12 @@ import Navigator from '@/module/page/shared/HomeNavigator/Container'
 import { MAX_WIDTH_MOBILE, MIN_WIDTH_PC } from '@/config/constant'
 import { SUGGESTION_STATUS } from '@/constant'
 
+import { ReactComponent as ArchiveIcon } from '@/assets/images/icon-archive.svg'
+import { ReactComponent as DeleteIcon } from '@/assets/images/icon-delete.svg'
+import { ReactComponent as AbuseIcon } from '@/assets/images/icon-abuse.svg'
+
 import '@/module/page/admin/admin.scss'
 import './style.scss'
-
-import { Col, Row, Input, Select, Button, Table } from 'antd'
-import moment from 'moment/moment'
 
 const FILTERS = {
     ALL: 'all',
@@ -45,7 +48,7 @@ export default class extends ProfilePage {
     }
 
     ord_renderContent () {
-        const actionsNode = this.renderActions()
+        const actionsNode = this.renderHeaderActions()
         const listNode = this.renderList()
         return (
             <div className="p_ProfileSuggestions">
@@ -83,6 +86,22 @@ export default class extends ProfilePage {
                 placeholder={I18N.get('developer.search.search.placeholder')}/>
         </div>
 
+    }
+
+    renderAdminActions() {
+        const { archive, remove, abuse } = this.props
+        return (
+            <span>
+                <span onClick={() => this.updateAndRefetch(archive)}>{<ArchiveIcon />}</span>
+                <span onClick={() => this.updateAndRefetch(remove)}>{<DeleteIcon />}</span>
+                <span onClick={() => this.updateAndRefetch(abuse)}>{<AbuseIcon />}</span>
+            </span>
+        )
+
+    }
+    updateAndRefetch = async(actionFn) => {
+        await actionFn(this.state.currRowId)
+        this.refetch()
     }
 
     renderColumns() {
@@ -124,18 +143,22 @@ export default class extends ProfilePage {
             {
                 title: 'Created',
                 dataIndex: 'createdAt',
-                className: 'right-align',
                 render: createdAt => moment(createdAt).format('MMM D'),
                 sorter: (a, b) => {
                     return moment(a.createdAt).valueOf() - moment(b.createdAt).valueOf()
                 },
                 defaultSortOrder: 'descend'
+            },
+            {
+                title: '',
+                dataIndex: '_id',
+                render: _id => _id === this.state.currRowId ? this.renderAdminActions() : ''
             }
         ]
         return columns
     }
 
-    renderActions() {
+    renderHeaderActions() {
         const searchNode = this.renderSearch()
         return <div>
             {searchNode}
@@ -170,6 +193,9 @@ export default class extends ProfilePage {
 
         return <Table
             columns={columns}
+            onRow={record => {
+                return { onMouseEnter: event => this.setState({ currRowId: record._id }) }
+            }}
             rowKey={item => item._id}
             dataSource={dataList}
             loading={loading}

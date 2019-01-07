@@ -48,6 +48,15 @@ const mapDispatch = () => {
 
         saveFilter(filter) {
             service.saveFilter(filter)
+        },
+        async abuse(id) {
+            return service.abuse(id)
+        },
+        async archive(id) {
+            return service.archive(id)
+        },
+        async remove(id) {
+            return service.delete(id)
         }
 
     }
