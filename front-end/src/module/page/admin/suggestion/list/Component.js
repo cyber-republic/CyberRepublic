@@ -215,7 +215,6 @@ export default class extends ProfilePage {
     }
 
     onSortByChanged = (sortBy) => {
-        console.log('sortBy is: ', sortBy)
         this.setState({
             sortBy
         }, this.refetch)
