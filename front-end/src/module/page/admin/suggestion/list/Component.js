@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import MediaQuery from 'react-responsive'
-import I18N from '@/I18N';
+import I18N from '@/I18N'
 import ProfilePage from '@/module/page/ProfilePage'
 import Footer from '@/module/layout/Footer/Container'
 import Navigator from '@/module/page/shared/HomeNavigator/Container'
@@ -24,6 +24,8 @@ export default class extends ProfilePage {
         super(props)
 
         this.state = {
+            page: 1,
+            results: 10,
             showMobile: false,
             filter: FILTERS.ALL,
             search: ''
@@ -36,7 +38,6 @@ export default class extends ProfilePage {
         super.componentDidMount()
 
         this.refetch()
-        this.props.getSuggestions({ results: 10 })
     }
 
     componentWillUnmount() {
@@ -164,15 +165,27 @@ export default class extends ProfilePage {
         </div>
     }
     renderList() {
-        const dataList = this.props.all_suggestions
+        const { all_suggestions: dataList, loading, all_suggestions_total: total } = this.props
         const columns = this.renderColumns()
 
         return <Table
             columns={columns}
-            rowKey={(item) => item._id}
+            rowKey={item => item._id}
             dataSource={dataList}
-            loading={this.props.loading}
+            loading={loading}
+            onChange={this.onTableChanged}
+            pagination={{
+                pageSize: this.state.results,
+                total: loading ? 0 : total,
+                onChange: this.loadPage
+            }}
         />
+    }
+    onTableChanged = (pagination, filters, sorter) => {
+        this.setState({
+            filteredInfo: filters,
+            pagination: pagination
+        })
     }
 
     onSortByChanged = (sortBy) => {
@@ -200,8 +213,8 @@ export default class extends ProfilePage {
             query.status = FILTERS.ARCHIVED
         }
 
-        query.page = this.state.page || 1
-        query.results = this.state.results || 5
+        query.page = this.state.page
+        query.results = this.state.results
 
         return query
     }
