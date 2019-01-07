@@ -13,6 +13,7 @@ import { ReactComponent as DislikeIcon } from '@/assets/images/icon-dislike.svg'
 import { ReactComponent as CommentIcon } from '@/assets/images/icon-comment.svg'
 import { ReactComponent as FollowIcon } from '@/assets/images/icon-follow.svg'
 import { ReactComponent as FlagIcon } from '@/assets/images/icon-flag.svg'
+import Comments from '@/module/common/comments/Container'
 
 import './style.scss'
 
@@ -42,11 +43,22 @@ export default class extends StandardPage {
         console.log(dataList, total)
         const headerNode = this.renderHeader()
         const detailNode = this.renderDetail()
+        const commentNode = this.renderCommentNode()
         return (
             <div className='p-suggestion'>
                 {headerNode}
                 {detailNode}
+                {commentNode}
             </div>
+        )
+    }
+
+    renderCommentNode() {
+        const { detail } = this.props
+        return (
+            <Comments type='suggestion' suggestion={detail} canPost={true} model={detail._id}
+                returnUrl={`/suggestion/${detail._id}`}
+            />
         )
     }
 
