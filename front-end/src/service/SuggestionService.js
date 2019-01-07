@@ -3,6 +3,11 @@ import _ from 'lodash'
 import { api_request } from '@/util'
 
 export default class extends BaseService {
+    async saveFilter(filter) {
+        const selfRedux = this.store.getRedux('suggestion')
+        this.dispatch(selfRedux.actions.filter_update(filter))
+    }
+
     async loadMore(qry) {
         const selfRedux = this.store.getRedux('suggestion')
         const path = '/api/suggestion/list'

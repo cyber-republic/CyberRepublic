@@ -44,7 +44,12 @@ const mapDispatch = () => {
 
         resetAll() {
             return service.resetAll()
+        },
+
+        saveFilter(filter) {
+            service.saveFilter(filter)
         }
+
     }
 }
 
