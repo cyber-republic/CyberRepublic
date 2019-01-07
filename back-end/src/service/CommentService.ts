@@ -22,7 +22,7 @@ export default class extends Base {
             .populate('subscribers', sanitizeWithEmail)
 
         if (commentable) {
-            const updateObj = {
+            const updateObj: any = {
                 comments: commentable.comments || [],
                 subscribers: commentable.subscribers || []
             }
@@ -32,6 +32,7 @@ export default class extends Base {
                 createdBy: this.currentUser,
                 createdAt
             })
+            if (!_.isUndefined(commentable.commentsNum)) updateObj.commentsNum = updateObj.comments.length
 
             const mentions = comment.match(/@\w+/g)
             if (mentions) {

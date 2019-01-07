@@ -42,10 +42,10 @@ export const Suggestion = {
         default: 0
     },
     comments: [[CommentSchema]],
-    // commentsNum: {
-    //     type: Number,
-    //     default: 0,
-    // },
+    commentsNum: {
+        type: Number,
+        default: 0,
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'users',
