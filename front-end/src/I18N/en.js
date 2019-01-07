@@ -205,6 +205,7 @@ const en = {
     'suggestion.likes': 'Likes',
     'suggestion.views': 'Views',
     'suggestion.activeness': 'Activeness',
+    'suggestion.owner': 'Owner',
     'suggestion.dateAdded': 'Date Added',
     'suggestion.postedBy': 'Posted By',
     'suggestion.follow': 'follow',
