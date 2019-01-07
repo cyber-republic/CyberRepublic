@@ -198,6 +198,7 @@ const en = {
     'user.unfollow': 'Unfollow',
 
     // suggestion
+    'suggestion.subject': 'Subject',
     'suggestion.title': 'Suggestions',
     'suggestion.add': 'Add a Suggestion',
     'suggestion.sort': 'Sort by',
@@ -217,9 +218,11 @@ const en = {
     'suggestion.all': 'All',
     'suggestion.addedByMe': 'Added by me',
     'suggestion.commentedByMe': 'Commented by me',
+    'suggestion.subscribed': 'Followed',
     'suggestion.followed': 'Followed',
     'suggestion.summary': 'Summary',
     'suggestion.dislikes': 'Dislikes',
+    'suggestion.comments': 'Comments',
     'suggestion.created': 'Created',
     'suggestion.archived': 'Archived',
     'suggestion.search': 'Search',

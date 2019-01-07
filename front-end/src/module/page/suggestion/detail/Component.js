@@ -83,8 +83,9 @@ export default class extends StandardPage {
     renderMetaNode() {
         const { detail } = this.props
         const author = `${_.get(detail, 'createdBy.profile.firstName')} ${_.get(detail, 'createdBy.profile.lastName')}`
+        const metaData = `# ${detail.displayId} ${I18N.get('suggestion.postedBy')} ${author} ${detail.createdAt}`
         return (
-            <div>`#${detail.displayId} ${I18N.get('suggestion.postedBy')} ${author} ${detail.createdAt}`</div>
+            <div>{metaData}</div>
         )
     }
     renderTitleNode() {
