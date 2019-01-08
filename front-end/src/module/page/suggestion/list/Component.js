@@ -1,14 +1,16 @@
 import React from 'react';
 import _ from 'lodash'
 import {
-    Tabs,
     List,
     Icon,
     Modal,
-    Button
+    Button,
+    Popover,
+    Col, Row, Input, Select
 } from 'antd';
 import I18N from '@/I18N'
 import StandardPage from '../../StandardPage';
+import Footer from '@/module/layout/Footer/Container'
 import MySuggestion from '../my_list/Container'
 import SuggestionForm from '@/module/form/SuggestionForm/Container'
 
@@ -18,15 +20,24 @@ import { ReactComponent as CommentIcon } from '@/assets/images/icon-comment.svg'
 import { ReactComponent as FollowIcon } from '@/assets/images/icon-follow.svg'
 import { ReactComponent as FlagIcon } from '@/assets/images/icon-flag.svg'
 
+import MediaQuery from 'react-responsive'
+import { MAX_WIDTH_MOBILE, MIN_WIDTH_PC } from '@/config/constant'
+
 import './style.scss'
 
-const TabPane = Tabs.TabPane
-
-const sortBy = {
+const SORT_BY = {
     likesNum: 'likesNum',
     viewsNum: 'viewsNum',
     activeness: 'activeness',
     createdAt: 'createdAt'
+
+}
+
+const SORT_BY_TEXT = {
+    likesNum: 'Likes',
+    viewsNum: 'Views',
+    activeness: 'Activeness',
+    createdAt: 'Date Added'
 
 }
 
@@ -43,21 +54,16 @@ export default class extends StandardPage {
             showForm: false,
             isDropdownActionOpen: false,
             showMobile: false,
-            sortBy: sortBy.likesNum,
+            sortBy: SORT_BY.likesNum,
             page: 1,
             results: 10,
-            search: ''
+            total: 0
         }
-
-        this.debouncedLoadMore = _.debounce(this.loadMore.bind(this), 300)
-        this.debouncedRefetch = _.debounce(this.refetch.bind(this), 300)
     }
 
     componentDidMount() {
         super.componentDidMount()
-        const { currentUserId } = this.props
         this.refetch()
-        this.props.getMySuggestions({ createdBy: currentUserId, results: 5 })
     }
 
     componentWillUnmount() {
@@ -65,24 +71,29 @@ export default class extends StandardPage {
     }
 
     ord_renderContent() {
-        const { all_suggestions: dataList, all_suggestions_total: total } = this.props;
+        const { dataList, total } = this.props;
         console.log(dataList, total)
         const headerNode = this.renderHeader()
-        const filterNode = this.renderFilter()
         const addButtonNode = this.renderAddButton()
+        const actionsNode = this.renderHeaderActions()
         const listNode = this.renderList()
         const mySuggestionNode = this.renderMySuggestion()
-        const paginationNode = this.renderPagination()
         const createForm = this.renderCreateForm()
         return (
-            <div className='p-suggestion'>
-                {addButtonNode}
-                {headerNode}
-                {filterNode}
-                {listNode}
-                {mySuggestionNode}
-                {paginationNode}
-                {createForm}
+            <div>
+                <div className='p_SuggestionList'>
+                    {headerNode}
+                    <Row gutter={24}>
+                        <Col span={15}>{actionsNode}</Col>
+                        <Col span={9}>{addButtonNode}</Col>
+                    </Row>
+                    <Row gutter={24}>
+                        <Col span={15}>{listNode}</Col>
+                        <Col span={9}>{mySuggestionNode}</Col>
+                    </Row>
+                    {createForm}
+                </div>
+                <Footer />
             </div>
         )
     }
@@ -109,21 +120,44 @@ export default class extends StandardPage {
     }
 
     renderHeader() {
-        return <div className='title'>{I18N.get('suggestion.title').toUpperCase()}</div>
-    }
-    renderFilter() {
-        // refer to UserEditForm
         return (
-            <Tabs defaultActiveKey='1' onChange={this.onSortByChanged.bind(this)}>
-                <TabPane tab='likesNum' key='likesNum'>Content of Tab Pane 1</TabPane>
-                <TabPane tab='views' key='views'>Content of Tab Pane 2</TabPane>
-                <TabPane tab='activeness' key='activeness'>Content of Tab Pane 3</TabPane>
-                <TabPane tab='createdAt' key='createdAt'>Content of Tab Pane 3</TabPane>
-            </Tabs>
+            <h2 className='title komu-a cr-title-with-icon'>{this.props.header || I18N.get('suggestion.title').toUpperCase()}</h2>
         )
     }
+    renderHeaderActions() {
+        return <div className='header-actions-container'>
+            <MediaQuery maxWidth={MAX_WIDTH_MOBILE}>
+                <Select
+                    name='type'
+                    onChange={this.onSortByChanged}
+                    value={this.state.sortBy}
+                >
+                    {_.map(SORT_BY, (filter, key) => {
+                        return <Select.Option key={filter} value={filter}>
+                            {key}
+                        </Select.Option>
+                    })}
+                </Select>
+            </MediaQuery>
+            <MediaQuery minWidth={MIN_WIDTH_PC}>
+                <Button.Group className='filter-group'>
+                    {_.map(SORT_BY, (value, key) => {
+                        return (
+                            <Button
+                                key={value}
+                                onClick={() => this.onSortByChanged(value)}
+                                className={(this.state.sortBy === value && 'selected') || ''}
+                            >
+                                {SORT_BY_TEXT[value]}
+                            </Button>
+                        )
+                    })}
+                </Button.Group>
+            </MediaQuery>
+        </div>
+    }
+
     renderAddButton() {
-        // TODO: use modal to create
         return (
             <div className="pull-right filter-group btn-create-suggestion">
                 <Button onClick={this.showCreateForm}>
@@ -133,8 +167,9 @@ export default class extends StandardPage {
         )
     }
     renderList() {
-        const suggestionsList = this.props.all_suggestions;
-        const listData = _.map(suggestionsList, data => ({
+        const { dataList, total } = this.props
+        const { results } = this.state
+        const dataSource = _.map(dataList, data => ({
             href: `/suggestion/${data._id}`,
             title: data.title,
             content: data.desc, // TODO: limited length
@@ -162,17 +197,21 @@ export default class extends StandardPage {
             )
         }
         const getActions = ({ likesNum, dislikesNum, commentsNum, viewsNum, _id }) => {
-            const dropdownActions = this.state.isDropdownActionOpen && (
+            const content = (
                 <div>
                     <div onClick={() => this.props.subscribe(_id)}><IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} /></div>
                     <div onClick={() => this.props.reportAbuse(_id)}><IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} /></div>
                 </div>
             )
+            const dropdownActions = (
+                <Popover content={content}>
+                    <Icon type={'ellipsis'} />
+                </Popover>
+            )
             return ([
                 <IconText component={<LikeIcon />} text={likesNum} />,
                 <IconText component={<DislikeIcon />} text={dislikesNum} />,
                 <IconText component={<CommentIcon />} text={commentsNum} />,
-                <Icon type={'ellipsis'} style={{ marginRight: 8 }} onClick={this.showDropdownActions} />,
                 dropdownActions,
                 <span>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</span>
             ])
@@ -194,13 +233,11 @@ export default class extends StandardPage {
         return <List
             itemLayout='vertical'
             pagination={{
-                onChange: (page) => {
-                    console.log(page)
-                    this.loadPage(page)
-                },
-                pageSize: 5
+                pageSize: results,
+                total: total,
+                onChange: this.loadPage
             }}
-            dataSource={listData}
+            dataSource={dataSource}
             renderItem={renderItem}
         />
     }
@@ -212,32 +249,22 @@ export default class extends StandardPage {
     renderMySuggestion() {
         return <MySuggestion />
     }
-    renderPagination() {
-        // TODO: loadMore, loadPage
-        return <div className='pagination'>Pagination</div>
-    }
-    // onSortByChanged
-    onSortByChanged(sortBy) {
-        console.log('sortBy is: ', sortBy)
-        this.setState({
-            sortBy
-        }, this.refetch.bind(this))
-    }
-    // fetchData
-    // fetchDataByPage
+
+    onSortByChanged = sortBy => this.setState({ sortBy }, this.refetch)
 
     /**
      * Builds the query from the current state
      */
-    getQuery() {
-        const query = {}
-
+    getQuery = () => {
+        const { page, results } = this.state
+        const query = {
+            page,
+            results
+        }
+        // TODO
         if (this.state.sortBy) {
             query.sortBy = this.state.sortBy
         }
-
-        query.page = this.state.page || 1
-        query.results = this.state.results || 5
 
         return query
     }
@@ -245,14 +272,12 @@ export default class extends StandardPage {
     /**
      * Refetch the data based on the current state retrieved from getQuery
      */
-    refetch() {
+    refetch = () => {
         const query = this.getQuery()
-        this.props.getSuggestions(query)
+        this.props.getList(query)
     }
 
-    async loadMore() {
-        const page = this.state.page + 1
-
+    loadPage = async(page) => {
         const query = {
             ...this.getQuery(),
             page,
@@ -262,7 +287,7 @@ export default class extends StandardPage {
         this.setState({ loadingMore: true })
 
         try {
-            await this.props.loadMoreSuggestions(query)
+            await this.props.loadMore(query)
             this.setState({ page })
         } catch (e) {
             // Do not update page in state if the call fails
@@ -271,30 +296,7 @@ export default class extends StandardPage {
         this.setState({ loadingMore: false })
     }
 
-    async loadPage(page) {
-        const query = {
-            ...this.getQuery(),
-            page,
-            results: this.state.results
-        }
-
-        this.setState({ loadingMore: true })
-
-        try {
-            await this.props.loadMoreSuggestions(query)
-            this.setState({ page })
-        } catch (e) {
-            // Do not update page in state if the call fails
-        }
-
-        this.setState({ loadingMore: false })
-    }
-
-    hasMoreSuggestions() {
-        return _.size(this.props.all_suggestions) < this.props.all_suggestions_total
-    }
-
-    linkSuggestionDetail(suggestionId) {
-        this.props.history.push(`/suggestion/${suggestionId}`)
+    gotoDetail(id) {
+        this.props.history.push(`/suggestion/${id}`)
     }
 }

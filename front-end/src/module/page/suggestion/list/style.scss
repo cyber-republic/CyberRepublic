@@ -2,8 +2,24 @@
 @import "../../../../style/variable";
 @import "../../../../style/color";
 
-.p-suggestion {
+.p_SuggestionList {
+  margin-left: 108px;
+  margin-top: 70px;
   .title {
     font-size: 96px;
+  }
+  .header-actions-container {
+    margin-bottom: 40px;
+  }
+  .ant-btn {
+    border: 0;
+  }
+  .ant-btn-group .ant-btn.selected {
+    border: 0;
+    color: black;
+    border-bottom: 9px solid $cr_primary_highlight;
+  }
+  .ant-btn-group > .ant-btn:first-child:not(:last-child), .ant-btn-group > span:first-child:not(:last-child) > .ant-btn {
+    border-radius: 0;
   }
 }

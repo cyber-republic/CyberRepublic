@@ -11,6 +11,8 @@ const mapState = (state) => {
 
     const suggestionState = {
         ...state.suggestion,
+        dataList: state.suggestion.all_suggestions,
+        total: state.suggestion.all_suggestions_total,
         currentUserId,
         filter: state.suggestion.filter || {}
     }
@@ -23,21 +25,14 @@ const mapDispatch = () => {
     const commentService = new CommentService()
 
     return {
-        async getSuggestions(query) {
+        async getList(query) {
             return service.list({
                 status: SUGGESTION_STATUS.ACTIVE,
                 ...query
             })
         },
 
-        async getMySuggestions(query) {
-            return service.myList({
-                status: SUGGESTION_STATUS.ACTIVE,
-                ...query
-            })
-        },
-
-        async loadMoreSuggestions(query) {
+        async loadMore(query) {
             return service.loadMore({
                 status: SUGGESTION_STATUS.ACTIVE,
                 ...query
