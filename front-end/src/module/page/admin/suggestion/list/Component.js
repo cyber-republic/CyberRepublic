@@ -75,7 +75,7 @@ export default class extends AdminPage {
     }
     renderHeader() {
         return (
-            <h2 className="title komu-a no-margin with-gizmo with-bg">{this.props.header || I18N.get('suggestion.title').toUpperCase()}</h2>
+            <h2 className="title komu-a cr-title-with-icon">{this.props.header || I18N.get('suggestion.title').toUpperCase()}</h2>
         )
     }
 
