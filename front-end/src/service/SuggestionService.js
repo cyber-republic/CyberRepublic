@@ -9,21 +9,7 @@ export default class extends BaseService {
     }
 
     async loadMore(qry) {
-        const selfRedux = this.store.getRedux('suggestion')
-        const path = '/api/suggestion/list'
-
-        const result = await api_request({
-            path,
-            method: 'get',
-            data: qry
-        })
-
-        const oldSuggestions = this.store.getState().suggestion.all_suggestions || []
-
-        this.dispatch(selfRedux.actions.all_suggestions_total_update(result.total))
-        this.dispatch(selfRedux.actions.all_suggestions_update(oldSuggestions.concat(_.values(result.list))))
-
-        return result
+        this.list(qry)
     }
 
     async list(qry) {
