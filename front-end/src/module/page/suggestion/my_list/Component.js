@@ -12,7 +12,7 @@ export default class extends BaseComponent {
         const headerNode = this.renderHeader()
         const listNode = this.renderList()
         return (
-            <div className='p-suggestion'>
+            <div className='p_MySuggestionList'>
                 {headerNode}
                 {listNode}
             </div>

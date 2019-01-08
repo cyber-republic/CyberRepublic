@@ -9,7 +9,6 @@ import Footer from '@/module/layout/Footer/Container'
 import Navigator from '@/module/page/shared/HomeNavigator/Container'
 import { MAX_WIDTH_MOBILE, MIN_WIDTH_PC } from '@/config/constant'
 
-import '@/module/page/admin/admin.scss'
 import './style.scss'
 
 const FILTERS = {
@@ -65,7 +64,7 @@ export default class extends ProfilePage {
         )
 
         return (
-            <div className='p_SuggestionList'>
+            <div className='p_ProfileSuggestionList'>
                 <div className='ebp-wrap'>
                     <Row>
                         {nav}
