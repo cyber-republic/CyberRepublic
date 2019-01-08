@@ -108,32 +108,6 @@ export default class extends Base {
     return this.model.findById(_id)
   }
 
-  // // subscribe <=> unsubscribe
-  // public async subscribe(param: any): Promise<Document> {
-  //   // willSubscribe: Boolean
-  //   const { id: _id, willSubscribe } = param
-  //   const userId = _.get(this.currentUser, '_id')
-  //   const doc = await this.model.findById(_id)
-
-  //   // query.$or.push({subscribers: {$in: [currentUserId]}})
-
-  //   const { subscribers } = doc
-
-  //   // FIXME: already subscribed
-  //   if (willSubscribe && _.findIndex(subscribers, oid => userId.equals(oid)) !== -1) return doc
-
-  //   // not subscribe yet, will subscribe
-  //   await this.model.findOneAndUpdate({ _id }, {
-  //     $push: { subscribers: {user: userId, lastSeen: new Date()} },
-  //     $inc: { subscribersNum: 1 }
-  //   })
-
-  //   // TODO: add email notification in CommentService.js
-
-  //   return this.model.findById(_id)
-
-  // }
-
   public async reportabuse(param: any): Promise<Document> {
     const { id: _id } = param
     const updateObject = {
