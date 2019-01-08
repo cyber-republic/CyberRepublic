@@ -9,8 +9,6 @@ import {
 } from 'antd';
 import I18N from '@/I18N'
 import StandardPage from '../../StandardPage';
-import Footer from '@/module/layout/Footer/Container'
-import Navigator from '@/module/page/shared/HomeNavigator/Container'
 import MySuggestion from '../my_list/Container'
 import SuggestionForm from '@/module/form/SuggestionForm/Container'
 

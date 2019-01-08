@@ -4,7 +4,7 @@ import MediaQuery from 'react-responsive'
 import { Col, Row, Input, Select, Button, Table } from 'antd'
 import moment from 'moment/moment'
 import I18N from '@/I18N'
-import ProfilePage from '@/module/page/ProfilePage'
+import AdminPage from '../../BaseAdmin'
 import Footer from '@/module/layout/Footer/Container'
 import Navigator from '@/module/page/shared/HomeNavigator/Container'
 import { MAX_WIDTH_MOBILE, MIN_WIDTH_PC } from '@/config/constant'
@@ -22,7 +22,7 @@ const FILTERS = {
     ARCHIVED: SUGGESTION_STATUS.ARCHIVED
 }
 
-export default class extends ProfilePage {
+export default class extends AdminPage {
     constructor(props) {
         super(props)
 
@@ -48,19 +48,20 @@ export default class extends ProfilePage {
     }
 
     ord_renderContent () {
+        const headerNode = this.renderHeader()
         const actionsNode = this.renderHeaderActions()
         const listNode = this.renderList()
         return (
-            <div className="p_ProfileSuggestions">
-                <div className="ebp-header-divider"></div>
+            <div className="p_AdminSuggestionList">
                 <div className="p_admin_index ebp-wrap">
                     <div className="d_box">
                         <div className="p_admin_content">
                             <Row>
                                 <Col sm={24} md={4} className="wrap-box-navigator">
-                                    <Navigator selectedItem={'profileSuggestions'}/>
+                                    <Navigator selectedItem={'profileAdminSuggestions'}/>
                                 </Col>
                                 <Col sm={24} md={20} className="c_ProfileContainer admin-right-column wrap-box-user">
+                                    {headerNode}
                                     {actionsNode}
                                     {listNode}
                                 </Col>
@@ -68,10 +69,16 @@ export default class extends ProfilePage {
                         </div>
                     </div>
                 </div>
-                <Footer/>
+                <Footer />
             </div>
         )
     }
+    renderHeader() {
+        return (
+            <h2 className="title komu-a no-margin with-gizmo with-bg">{this.props.header || I18N.get('suggestion.title').toUpperCase()}</h2>
+        )
+    }
+
     onSearchChanged = (e) => {
         const search = e.target.value
         this.setState({
@@ -91,7 +98,7 @@ export default class extends ProfilePage {
     renderAdminActions() {
         const { archive, remove, abuse } = this.props
         return (
-            <span>
+            <span className='admin-actions'>
                 <span onClick={() => this.updateAndRefetch(archive)}>{<ArchiveIcon />}</span>
                 <span onClick={() => this.updateAndRefetch(remove)}>{<DeleteIcon />}</span>
                 <span onClick={() => this.updateAndRefetch(abuse)}>{<AbuseIcon />}</span>
@@ -107,8 +114,12 @@ export default class extends ProfilePage {
     renderColumns() {
         const columns = [
             {
-                title: '#',
-                dataIndex: 'displayId'
+                title: <span>#</span>,
+                dataIndex: 'displayId',
+                sorter: (a, b) => {
+                    return a.displayId - b.displayId
+                },
+                defaultSortOrder: 'descend'
             },
             {
                 title: I18N.get('suggestion.subject'),
@@ -120,20 +131,32 @@ export default class extends ProfilePage {
                 }
             },
             {
-                title: I18N.get('suggestion.likes'),
-                dataIndex: 'likesNum'
+                title: <span>{I18N.get('suggestion.likes')}</span>,
+                dataIndex: 'likesNum',
+                sorter: (a, b) => {
+                    return a.likesNum - b.likesNum
+                }
             },
             {
-                title: I18N.get('suggestion.dislikes'),
-                dataIndex: 'dislikesNum'
+                title: <span>{I18N.get('suggestion.dislikes')}</span>,
+                dataIndex: 'dislikesNum',
+                sorter: (a, b) => {
+                    return a.dislikesNum - b.dislikesNum
+                }
             },
             {
-                title: I18N.get('suggestion.comments'),
-                dataIndex: 'commentsNum'
+                title: <span>{I18N.get('suggestion.comments')}</span>,
+                dataIndex: 'commentsNum',
+                sorter: (a, b) => {
+                    return a.commentsNum - b.commentsNum
+                }
             },
             {
-                title: I18N.get('suggestion.activeness'),
-                dataIndex: 'activeness'
+                title: <span>{I18N.get('suggestion.activeness')}</span>,
+                dataIndex: 'activeness',
+                sorter: (a, b) => {
+                    return a.activeness - b.activeness
+                }
             },
             {
                 title: I18N.get('suggestion.owner'),
@@ -141,13 +164,12 @@ export default class extends ProfilePage {
                 render: data => `${_.get(data, 'firstName')} ${_.get(data, 'lastName')}`
             },
             {
-                title: 'Created',
+                title: <span>{I18N.get('suggestion.created')}</span>,
                 dataIndex: 'createdAt',
                 render: createdAt => moment(createdAt).format('MMM D'),
                 sorter: (a, b) => {
                     return moment(a.createdAt).valueOf() - moment(b.createdAt).valueOf()
-                },
-                defaultSortOrder: 'descend'
+                }
             },
             {
                 title: '',
@@ -160,7 +182,7 @@ export default class extends ProfilePage {
 
     renderHeaderActions() {
         const searchNode = this.renderSearch()
-        return <div>
+        return <div className='header-actions-container'>
             {searchNode}
             <MediaQuery maxWidth={MAX_WIDTH_MOBILE}>
                 <Select
