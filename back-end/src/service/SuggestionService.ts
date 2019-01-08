@@ -28,7 +28,7 @@ export default class extends Base {
   public async list(param: any): Promise<Document> {
     // TODO: sort by likes, created, activeness
     const cursor = this.model.getDBInstance()
-      .find(_.omit(param, ['results', 'page', 'sortBy', 'sortOrder']))
+      .find(param)
       .populate('createdBy', constant.DB_SELECTED_FIELDS.USER.NAME)
 
     if (param.sortBy) {
