@@ -68,13 +68,13 @@ export default class extends Base {
     if (_.findIndex(likes, oid => userId.equals(oid)) !== -1) {
       await this.model.findOneAndUpdate({ _id }, {
         $pull: { likes: userId },
-        $inc: { likesNum: -1}
+        $inc: { likesNum: -1, activeness: -1 }
       })
     } else {
       // not like yet, will like it
       await this.model.findOneAndUpdate({ _id }, {
         $push: { likes: userId },
-        $inc: { likesNum: 1 }
+        $inc: { likesNum: 1, activeness: 1 }
       })
     }
 
@@ -95,13 +95,13 @@ export default class extends Base {
     if (_.findIndex(dislikes, oid => userId.equals(oid)) !== -1) {
       await this.model.findOneAndUpdate({ _id }, {
         $pull: { dislikes: userId },
-        $inc: { dislikesNum: -1 }
+        $inc: { dislikesNum: -1, activeness: -1 }
       })
     } else {
       // not like yet, will like it
       await this.model.findOneAndUpdate({ _id }, {
         $push: { dislikes: userId },
-        $inc: { dislikesNum: 1 }
+        $inc: { dislikesNum: 1, activeness: 1 }
       })
     }
 
