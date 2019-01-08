@@ -1,17 +1,16 @@
 import React from 'react'
 import _ from 'lodash'
 import MediaQuery from 'react-responsive'
-import I18N from '@/I18N';
 import ProfilePage from '@/module/page/ProfilePage'
+import { Col, Row, Input, Select, Button, Table } from 'antd'
+import moment from 'moment/moment'
+import I18N from '@/I18N'
 import Footer from '@/module/layout/Footer/Container'
 import Navigator from '@/module/page/shared/HomeNavigator/Container'
 import { MAX_WIDTH_MOBILE, MIN_WIDTH_PC } from '@/config/constant'
 
 import '@/module/page/admin/admin.scss'
 import './style.scss'
-
-import { Col, Row, Icon, Select, Tooltip, Badge, Breadcrumb, Button, Table } from 'antd'
-import moment from 'moment/moment'
 
 const FILTERS = {
     ALL: 'all',
@@ -20,11 +19,20 @@ const FILTERS = {
     SUBSCRIBED: 'subscribed'
 }
 
+const FILTERS_TEXT = {
+    ALL: 'All',
+    CREATED: 'Added by me',
+    COMMENTED: 'Commented by me',
+    SUBSCRIBED: 'Followed'
+}
+
 export default class extends ProfilePage {
     constructor(props) {
         super(props)
 
         this.state = {
+            page: 1,
+            results: 10,
             showMobile: false,
             filter: FILTERS.ALL
         }
@@ -32,10 +40,7 @@ export default class extends ProfilePage {
 
     componentDidMount() {
         super.componentDidMount()
-
-        const { currentUserId } = this.props
         this.refetch()
-        this.props.getMySuggestions({ createdBy: currentUserId, results: 10 })
     }
 
     componentWillUnmount() {
@@ -43,96 +48,85 @@ export default class extends ProfilePage {
     }
 
     ord_renderContent () {
-        const dataList = this.props.all_suggestions
+        const headerNode = this.renderHeader()
+        const actionsNode = this.renderHeaderActions()
+        const listNode = this.renderList()
+        const nav = (
+            <Col sm={24} md={4} className='wrap-box-navigator'>
+                <Navigator selectedItem={'profileSuggestions'}/>
+            </Col>
+        )
+        const body = (
+            <Col sm={24} md={20} className='c_ProfileContainer admin-right-column wrap-box-user'>
+                {headerNode}
+                {actionsNode}
+                {listNode}
+            </Col>
+        )
 
-        const columns = this.renderColumns()
-        const filtersNode = this.renderFilters()
         return (
-            <div className="p_ProfileSuggestions">
-                <div className="ebp-header-divider"></div>
-                <div className="p_admin_index ebp-wrap">
-                    <div className="d_box">
-                        <div className="p_admin_content">
-                            <Row>
-                                <Col sm={24} md={4} className="wrap-box-navigator">
-                                    <Navigator selectedItem={'profileSuggestions'}/>
-                                </Col>
-                                <Col sm={24} md={20} className="c_ProfileContainer admin-right-column wrap-box-user">
-                                    {filtersNode}
-                                    <div>
-                                        <Table
-                                            columns={columns}
-                                            rowKey={(item) => item._id}
-                                            dataSource={dataList}
-                                            loading={this.props.loading}
-                                        />
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <br/>
-                                </Col>
-                            </Row>
-                        </div>
-                    </div>
+            <div className='p_SuggestionList'>
+                <div className='ebp-wrap'>
+                    <Row>
+                        {nav}
+                        {body}
+                    </Row>
                 </div>
-                <Footer/>
+                <Footer />
             </div>
+        )
+    }
+    renderHeader() {
+        return (
+            <h2 className='title komu-a cr-title-with-icon'>{this.props.header || I18N.get('suggestion.title').toUpperCase()}</h2>
         )
     }
 
     renderColumns() {
         const columns = [
             {
-                title: '#',
-                dataIndex: 'displayId'
-            },
-            {
+                title: <span>#</span>,
+                dataIndex: 'displayId',
+                sorter: (a, b) => a.displayId - b.displayId,
+                defaultSortOrder: 'descend'
+            }, {
                 title: I18N.get('suggestion.subject'),
                 dataIndex: 'title',
                 // width: '50%',
                 className: 'fontWeight500 allow-wrap',
-                render: (title, data) => {
-                    return <a onClick={this.linkSuggestionDetail.bind(this, data._id)} className="tableLink">{title}</a>
-                }
-            },
-            {
-                title: I18N.get('suggestion.likes'),
-                dataIndex: 'likesNum'
-            },
-            {
-                title: I18N.get('suggestion.dislikes'),
-                dataIndex: 'dislikesNum'
-            },
-            {
-                title: I18N.get('suggestion.comments'),
-                dataIndex: 'commentsNum'
-            },
-            {
-                title: I18N.get('suggestion.activeness'),
-                dataIndex: 'activeness'
-            },
-            {
-                title: 'Created',
+                render: (title, data) => <a onClick={() => this.gotoDetail(data._id)} className='tableLink'>{title}</a>
+            }, {
+                title: <span>{I18N.get('suggestion.likes')}</span>,
+                dataIndex: 'likesNum',
+                sorter: (a, b) => a.likesNum - b.likesNum
+            }, {
+                title: <span>{I18N.get('suggestion.dislikes')}</span>,
+                dataIndex: 'dislikesNum',
+                sorter: (a, b) => a.dislikesNum - b.dislikesNum
+            }, {
+                title: <span>{I18N.get('suggestion.comments')}</span>,
+                dataIndex: 'commentsNum',
+                sorter: (a, b) => a.commentsNum - b.commentsNum
+            }, {
+                title: <span>{I18N.get('suggestion.activeness')}</span>,
+                dataIndex: 'activeness',
+                sorter: (a, b) => a.activeness - b.activeness
+            }, {
+                title: <span>{I18N.get('suggestion.created')}</span>,
                 dataIndex: 'createdAt',
-                className: 'right-align',
-                render: (createdAt) => moment(createdAt).format('MMM D'),
-                sorter: (a, b) => {
-                    return moment(a.createdAt).valueOf() - moment(b.createdAt).valueOf()
-                },
-                defaultSortOrder: 'descend'
+                render: createdAt => moment(createdAt).format('MMM D'),
+                sorter: (a, b) => moment(a.createdAt).valueOf() - moment(b.createdAt).valueOf()
             }
         ]
         return columns
     }
-
-    renderFilters() {
-        return <div>
+    // TODO
+    renderHeaderActions() {
+        return <div className='header-actions-container'>
             <MediaQuery maxWidth={MAX_WIDTH_MOBILE}>
                 <Select
-                    name="type"
-                    onChange={this.onSelectFilter.bind(this)}
+                    name='type'
+                    onChange={this.onFilterChanged}
                     value={this.state.filter}
                 >
                     {_.map(FILTERS, (filter, key) => {
@@ -143,45 +137,70 @@ export default class extends ProfilePage {
                 </Select>
             </MediaQuery>
             <MediaQuery minWidth={MIN_WIDTH_PC}>
-                <Button.Group className="filter-group">
-                    <Button
-                        className={(this.state.filter === FILTERS.ALL && 'selected') || ''}
-                        onClick={this.clearFilters.bind(this)}>{I18N.get('suggestion.all')}</Button>
-                    <Button
-                        className={(this.state.filter === FILTERS.CREATED_BY && 'selected') || ''}
-                        onClick={this.setCreatedFilter.bind(this)}>{I18N.get('suggestion.addedByMe')}</Button>
-                    <Button
-                        className={(this.state.filter === FILTERS.COMMENTED_BY && 'selected') || ''}
-                        onClick={this.setCreatedFilter.bind(this)}>{I18N.get('suggestion.commentedByMe')}</Button>
-                    <Button
-                        className={(this.state.filter === FILTERS.SUBSCRIBED && 'selected') || ''}
-                        onClick={this.setSubscribedFilter.bind(this)}>{I18N.get('suggestion.subscribed')}</Button>
+                <Button.Group className='filter-group'>
+                    {_.map(FILTERS, (value, key) => {
+                        return (
+                            <Button
+                                key={value}
+                                onClick={() => this.onFilterChanged(value)}
+                                className={(this.state.filter === value && 'selected') || ''}
+                            >
+                                {FILTERS_TEXT[key]}
+                            </Button>
+                        )
+                    })}
                 </Button.Group>
             </MediaQuery>
         </div>
     }
-    // onSortByChanged
-    onSortByChanged(sortBy) {
-        console.log('sortBy is: ', sortBy)
-        this.setState({
-            sortBy
-        }, this.refetch.bind(this))
+
+    renderList() {
+        const { dataList, loading, total } = this.props
+        const columns = this.renderColumns()
+
+        return <Table
+            columns={columns}
+            onRow={record => {
+                return { onMouseEnter: event => this.setState({ currRowId: record._id }) }
+            }}
+            rowKey={item => item._id}
+            dataSource={dataList}
+            loading={loading}
+            onChange={this.onTableChanged}
+            pagination={{
+                pageSize: this.state.results,
+                total: loading ? 0 : total,
+                onChange: this.loadPage
+            }}
+        />
     }
-    // fetchData
-    // fetchDataByPage
+    onTableChanged = (pagination, filters, sorter) => {
+        this.setState({
+            filteredInfo: filters,
+            pagination: pagination
+        })
+    }
+    // TODO
+    onSortByChanged = sortBy => this.setState({ sortBy }, this.refetch)
+
+    onFilterChanged = filter => this.setState({ filter }, this.refetch)
 
     /**
      * Builds the query from the current state
      */
-    getQuery() {
-        const query = {}
-
+    getQuery = () => {
+        const { currentUserId: profileListFor } = this.props
+        const { filter, page, results } = this.state
+        const query = {
+            profileListFor,
+            filter,
+            page,
+            results
+        }
+        // TODO
         if (this.state.sortBy) {
             query.sortBy = this.state.sortBy
         }
-
-        query.page = this.state.page || 1
-        query.results = this.state.results || 5
 
         return query
     }
@@ -189,14 +208,12 @@ export default class extends ProfilePage {
     /**
      * Refetch the data based on the current state retrieved from getQuery
      */
-    refetch() {
+    refetch = () => {
         const query = this.getQuery()
-        this.props.getSuggestions(query)
+        this.props.getList(query)
     }
 
-    async loadMore() {
-        const page = this.state.page + 1
-
+    loadPage = async(page) => {
         const query = {
             ...this.getQuery(),
             page,
@@ -206,7 +223,7 @@ export default class extends ProfilePage {
         this.setState({ loadingMore: true })
 
         try {
-            await this.props.loadMoreSuggestions(query)
+            await this.props.loadMore(query)
             this.setState({ page })
         } catch (e) {
             // Do not update page in state if the call fails
@@ -215,60 +232,7 @@ export default class extends ProfilePage {
         this.setState({ loadingMore: false })
     }
 
-    async loadPage(page) {
-        const query = {
-            ...this.getQuery(),
-            page,
-            results: this.state.results
-        }
-
-        this.setState({ loadingMore: true })
-
-        try {
-            await this.props.loadMoreSuggestions(query)
-            this.setState({ page })
-        } catch (e) {
-            // Do not update page in state if the call fails
-        }
-
-        this.setState({ loadingMore: false })
-    }
-
-    hasMoreSuggestions() {
-        return _.size(this.props.all_suggestions) < this.props.all_suggestions_total
-    }
-
-    onSelectFilter(value) {
-        switch (value) {
-            case FILTERS.CREATED:
-                this.setCreatedFilter()
-                break
-            case FILTERS.SUBSCRIBED:
-                this.setSubscribedFilter()
-                break
-            default:
-                this.clearFilters()
-                break
-        }
-    }
-
-    clearFilters() {
-        this.setState({ filter: FILTERS.ALL })
-    }
-
-    setCreatedFilter() {
-        this.setState({ filter: FILTERS.CREATED })
-    }
-
-    setSubscribedFilter() {
-        this.setState({ filter: FILTERS.SUBSCRIBED })
-    }
-
-    linkSuggestionDetail(suggestionId) {
-        this.props.history.push(`/profile/suggestion-detail/${suggestionId}`)
-    }
-
-    goCreatepage() {
-        this.props.history.push('/profile/suggestions/create')
+    gotoDetail(id) {
+        this.props.history.push(`/suggestion/${id}`)
     }
 }

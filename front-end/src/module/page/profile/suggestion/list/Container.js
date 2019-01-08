@@ -10,6 +10,8 @@ const mapState = (state) => {
 
     const suggestionState = {
         ...state.suggestion,
+        dataList: state.suggestion.my_suggestions,
+        total: state.suggestion.my_suggestions_total,
         currentUserId,
         filter: state.suggestion.filter || {}
     }
@@ -21,21 +23,14 @@ const mapDispatch = () => {
     const service = new SuggestionService()
 
     return {
-        async getSuggestions(query) {
-            return service.list({
-                status: SUGGESTION_STATUS.ACTIVE,
-                ...query
-            })
-        },
-
-        async getMySuggestions(query) {
+        async getList(query) {
             return service.myList({
                 status: SUGGESTION_STATUS.ACTIVE,
                 ...query
             })
         },
 
-        async loadMoreSuggestions(query) {
+        async loadMore(query) {
             return service.loadMore({
                 status: SUGGESTION_STATUS.ACTIVE,
                 ...query
