@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash'
+import moment from 'moment/moment'
 import {
     List,
     Icon,
@@ -159,7 +160,7 @@ export default class extends StandardPage {
 
     renderAddButton() {
         return (
-            <div className="pull-right filter-group btn-create-suggestion">
+            <div className="pull-left filter-group btn-create-suggestion">
                 <Button onClick={this.showCreateForm}>
                     {I18N.get('suggestion.add')}
                 </Button>
@@ -182,29 +183,27 @@ export default class extends StandardPage {
             _id: data._id,
             displayId: data.displayId
         }))
-        const IconText = ({ component, type, text }) => {
-            return type ? (
-                <span>
-                    <Icon type={type} style={{marginLeft: 8}} />
-                    {text}
+        const IconText = ({ component, text }) => {
+            return (
+                <span className='cr-icon-group'>
+                    <span>{component}</span>
+                    <span style={{marginLeft: 8}}>{text}</span>
                 </span>
-            ) : (
-                <span>
-                    {component}
-                    {text}
-                </span>
-
             )
         }
         const getActions = ({ likesNum, dislikesNum, commentsNum, viewsNum, _id }) => {
             const content = (
                 <div>
-                    <div onClick={() => this.props.subscribe(_id)}><IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} /></div>
-                    <div onClick={() => this.props.reportAbuse(_id)}><IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} /></div>
+                    <div onClick={() => this.props.subscribe(_id)}>
+                        <IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} />
+                    </div>
+                    <div onClick={() => this.props.reportAbuse(_id)}>
+                        <IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} />
+                    </div>
                 </div>
             )
             const dropdownActions = (
-                <Popover content={content}>
+                <Popover content={content} trigger='click'>
                     <Icon type={'ellipsis'} />
                 </Popover>
             )
@@ -213,7 +212,7 @@ export default class extends StandardPage {
                 <IconText component={<DislikeIcon />} text={dislikesNum} />,
                 <IconText component={<CommentIcon />} text={commentsNum} />,
                 dropdownActions,
-                <span>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</span>
+                <span className='pull-right'>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</span>
             ])
         }
         const renderItem = item => (
@@ -224,10 +223,10 @@ export default class extends StandardPage {
                 <List.Item.Meta
                     title={<a href={item.href}>{item.title}</a>}
                     description = {
-                        `#${item.displayId} ${I18N.get('suggestion.postedBy')} ${item.author} ${item.createdAt}`
+                        `#${item.displayId}  ${I18N.get('suggestion.postedBy')} ${item.author} ${moment(item.createdAt).format('MMM D, YYYY')}`
                     }
                 />
-                {item.content}
+                {/* <span dangerouslySetInnerHTML={{__html: item.content}}></span> */}
             </List.Item>
         )
         return <List

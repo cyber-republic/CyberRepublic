@@ -208,7 +208,7 @@ const en = {
     'suggestion.owner': 'Owner',
     'suggestion.dateAdded': 'Date Added',
     'suggestion.postedBy': 'Posted By',
-    'suggestion.follow': 'follow',
+    'suggestion.follow': 'Follow',
     'suggestion.reportAbuse': 'Report Abuse',
     'suggestion.translate': 'Translate in English',
     'suggestion.councilMember': 'Council Member',
