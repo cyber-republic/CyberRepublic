@@ -3,4 +3,13 @@
 
 .p_MySuggestionList {
   background: $bg_lighter_gray;
+  padding: 40px 30px;
+  .cr-mysuggestion-header .title {
+    font-size: 30px;
+  }
+  .cr-mysuggestion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
