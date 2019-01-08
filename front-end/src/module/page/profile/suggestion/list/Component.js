@@ -64,8 +64,8 @@ export default class extends ProfilePage {
         )
 
         return (
-            <div className='p_ProfileSuggestionList'>
-                <div className='ebp-wrap'>
+            <div>
+                <div className='p_ProfileSuggestionList'>
                     <Row>
                         {nav}
                         {body}

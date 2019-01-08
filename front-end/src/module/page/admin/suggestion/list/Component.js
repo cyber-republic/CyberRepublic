@@ -52,22 +52,18 @@ export default class extends AdminPage {
         const actionsNode = this.renderHeaderActions()
         const listNode = this.renderList()
         return (
-            <div className="p_AdminSuggestionList">
-                <div className="p_admin_index ebp-wrap">
-                    <div className="d_box">
-                        <div className="p_admin_content">
-                            <Row>
-                                <Col sm={24} md={4} className="wrap-box-navigator">
-                                    <Navigator selectedItem={'profileAdminSuggestions'}/>
-                                </Col>
-                                <Col sm={24} md={20} className="c_ProfileContainer admin-right-column wrap-box-user">
-                                    {headerNode}
-                                    {actionsNode}
-                                    {listNode}
-                                </Col>
-                            </Row>
-                        </div>
-                    </div>
+            <div>
+                <div className="p_AdminSuggestionList">
+                    <Row>
+                        <Col sm={24} md={4} className="wrap-box-navigator">
+                            <Navigator selectedItem={'profileAdminSuggestions'}/>
+                        </Col>
+                        <Col sm={24} md={20} className="c_ProfileContainer admin-right-column wrap-box-user">
+                            {headerNode}
+                            {actionsNode}
+                            {listNode}
+                        </Col>
+                    </Row>
                 </div>
                 <Footer />
             </div>
