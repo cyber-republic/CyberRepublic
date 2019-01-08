@@ -50,7 +50,7 @@ export default class extends Base {
       }
     }
 
-    const list = await service.list(_.omit(param, ['results', 'page', 'sortBy', 'sortOrder', 'filter', 'profileListFor', 'search']))
+    const list = await service.list(param)
     const total = await service.getDBModel('Suggestion').count()
 
     return this.result(1, {
