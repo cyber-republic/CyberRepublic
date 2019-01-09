@@ -1,19 +1,13 @@
 import React from 'react';
 import _ from 'lodash'
-import {
-    Icon,
-    Modal,
-    Button
-} from 'antd';
 import I18N from '@/I18N'
+import { Row, Col } from 'antd'
 import StandardPage from '../../StandardPage';
-
-import { ReactComponent as LikeIcon } from '@/assets/images/icon-like.svg'
-import { ReactComponent as DislikeIcon } from '@/assets/images/icon-dislike.svg'
-import { ReactComponent as CommentIcon } from '@/assets/images/icon-comment.svg'
-import { ReactComponent as FollowIcon } from '@/assets/images/icon-follow.svg'
-import { ReactComponent as FlagIcon } from '@/assets/images/icon-flag.svg'
 import Comments from '@/module/common/comments/Container'
+import ActionsContainer from '../common/actions/Container'
+import MetaContainer from '../common/meta/Container'
+import MySuggestion from '../my_list/Container'
+import Footer from '@/module/layout/Footer/Container'
 
 import './style.scss'
 
@@ -39,33 +33,30 @@ export default class extends StandardPage {
     }
 
     ord_renderContent() {
-        const headerNode = this.renderHeader()
         const detailNode = this.renderDetail()
         const translationBtn = this.renderTranslationBtn()
         const actionsNode = this.renderActionsNode()
+        const mySuggestionNode = this.renderMySuggestion()
         const commentNode = this.renderCommentNode()
         return (
-            <div className='p-suggestion'>
-                {headerNode}
-                {detailNode}
-                {translationBtn}
-                {actionsNode}
-                {commentNode}
+            <div>
+                <div className='p_SuggestionDetail'>
+                    <Row gutter={24}>
+                        <Col span={15}>
+                            {detailNode}
+                            {/* {translationBtn} */}
+                            {actionsNode}
+                            {commentNode}
+                        </Col>
+                        <Col span={9}>{mySuggestionNode}</Col>
+                    </Row>
+                </div>
+                <Footer />
             </div>
         )
     }
-
-    renderCommentNode() {
-        const { detail } = this.props
-        return (
-            <Comments type='suggestion' suggestion={detail} canPost={true} model={detail._id}
-                returnUrl={`/suggestion/${detail._id}`}
-            />
-        )
-    }
-
-    renderHeader() {
-        return <div className='title'>{I18N.get('suggestion.title').toUpperCase()}</div>
+    renderMySuggestion() {
+        return <MySuggestion />
     }
 
     renderDetail() {
@@ -83,62 +74,40 @@ export default class extends StandardPage {
     renderMetaNode() {
         const { detail } = this.props
         const author = `${_.get(detail, 'createdBy.profile.firstName')} ${_.get(detail, 'createdBy.profile.lastName')}`
-        const metaData = `# ${detail.displayId} ${I18N.get('suggestion.postedBy')} ${author} ${detail.createdAt}`
-        return (
-            <div>{metaData}</div>
-        )
+        const data = { ...detail, author }
+        return <MetaContainer data={data} />
     }
     renderTitleNode() {
         const { detail } = this.props
         return (
-            <div>{detail.title}</div>
+            <div className='detail-title'>{detail.title}</div>
         )
     }
     renderDescNode() {
         const { detail } = this.props
         return (
-            <div>{detail.desc}</div>
+            <div className='detail-desc' dangerouslySetInnerHTML={{__html: detail.desc}}></div>
         )
     }
+    // TODO
     renderTranslationBtn() {
         const { detail } = this.props
         return (
-            <div>refer to SuggestionForm.js</div>
+            <div>Translate in English</div>
         )
     }
     renderActionsNode() {
         const { detail } = this.props
-        const IconText = ({ component, type, text }) => {
-            return type ? (
-                <span>
-                    <Icon type={type} style={{marginLeft: 8}} />
-                    {text}
-                </span>
-            ) : (
-                <span>
-                    {component}
-                    {text}
-                </span>
 
-            )
-        }
-        const getActions = ({ likesNum, dislikesNum, commentsNum, viewsNum, _id }) => {
-            const dropdownActions = this.state.isDropdownActionOpen && (
-                <div key={1}>
-                    <div onClick={() => this.props.subscribe(_id)}><IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} /></div>
-                    <div onClick={() => this.props.reportAbuse(_id)}><IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} /></div>
-                </div>
-            )
-            return ([
-                <IconText component={<LikeIcon />} text={likesNum} key={2} />,
-                <IconText component={<DislikeIcon />} text={dislikesNum} key={3} />,
-                <IconText component={<CommentIcon />} text={commentsNum} key={4} />,
-                <Icon type={'ellipsis'} style={{ marginRight: 8 }} onClick={this.showDropdownActions} key={5} />,
-                dropdownActions,
-                <span key={6}>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</span>
-            ])
-        }
-        return getActions(detail)
+        return <ActionsContainer data={detail} refetch={this.refetch} />
+    }
+    renderCommentNode() {
+        const { detail } = this.props
+        return (
+            <Comments type='suggestion' suggestion={detail} canPost={true} model={detail._id}
+                returnUrl={`/suggestion/${detail._id}`}
+            />
+        )
     }
     showDropdownActions = () => {
         this.setState({

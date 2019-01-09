@@ -1,0 +1,20 @@
+@import "@/style/variable";
+@import "@/style/color";
+
+.c_SuggestionActions {
+  color: rgba(3, 30, 40, 0.3);
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  .cr-icon-group {
+    > span {
+      line-height: 16px;
+      height: 16px;
+    }
+  }
+  .anticon-ellipsis {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}
