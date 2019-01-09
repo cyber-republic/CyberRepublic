@@ -13,9 +13,9 @@ import { ReactComponent as FlagIcon } from '@/assets/images/icon-flag.svg'
 
 import './style.scss'
 
-const IconText = ({ component, text, onClick }) => {
+const IconText = ({ component, text, onClick, className = '' }) => {
     return (
-        <div className='cr-icon-group' onClick={onClick}>
+        <div className={`cr-icon-group ${className}`} onClick={onClick}>
             <span>{component}</span>
             <span style={{marginLeft: 16}}>{text}</span>
         </div>
@@ -32,32 +32,53 @@ export default class extends BaseComponent {
     }
 
     ord_render() {
-        const { like, dislike } = this.props
-        const { data } = this.props
-        const dataSource = {
-            likesNum: data.likesNum,
-            dislikesNum: data.dislikesNum,
-            commentsNum: data.commentsNum || 0,
-            viewsNum: data.viewsNum || 0,
-            _id: data._id
-        }
+        const { data, like, dislike, currentUserId } = this.props
         const popoverActions = this.renderPopover()
-        const getActions = ({ likesNum, dislikesNum, commentsNum, viewsNum, _id }) => {
-            const likeNode = <IconText component={<LikeIcon />} text={likesNum} onClick={() => this.handleClick(like, _id)} />
-            const dislikeNode = <IconText component={<DislikeIcon />} text={dislikesNum} onClick={() => this.handleClick(dislike, _id)} />
-            const commentNode = <div className='cr-icon-group'><IconText component={<CommentIcon />} text={commentsNum} /></div>
-            const viewsNode = <div className='cr-icon-group self-right'>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</div>
-            return (
-                <div className='c_SuggestionActions'>
-                    {likeNode}
-                    {dislikeNode}
-                    {commentNode}
-                    <div className='cr-icon-group'>{popoverActions}</div>
-                    {viewsNode}
-                </div>
-            )
-        }
-        const result = getActions(dataSource)
+        const { likesNum, dislikesNum, commentsNum, viewsNum, _id, likes, dislikes, subscribers } = data
+        const isLiked = _.includes(likes, currentUserId)
+        const isDisliked = _.includes(dislikes, currentUserId)
+        const isSubscribed = _.includes(subscribers, currentUserId)
+        const likeClass = isLiked ? 'selected' : ''
+        const dislikeClass = isDisliked ? 'selected' : ''
+        const likeNode = (
+            <IconText
+                component={<LikeIcon />}
+                text={likesNum}
+                onClick={() => this.handleClick(like, _id)}
+                className={likeClass}
+            />
+        )
+
+        const dislikeNode = (
+            <IconText
+                component={<DislikeIcon />}
+                text={dislikesNum}
+                onClick={() => this.handleClick(dislike, _id)}
+                className={dislikeClass}
+            />
+        )
+
+        const commentNode = (
+            <div className='cr-icon-group'>
+                <IconText component={<CommentIcon />} text={commentsNum} />
+            </div>
+        )
+
+        const viewsNode = (
+            <div className='cr-icon-group self-right'>
+                {viewsNum} {I18N.get('suggestion.views').toLowerCase()}
+            </div>
+        )
+
+        const result = (
+            <div className='c_SuggestionActions'>
+                {likeNode}
+                {dislikeNode}
+                {commentNode}
+                <div className='cr-icon-group'>{popoverActions}</div>
+                {viewsNode}
+            </div>
+        )
         return result
     }
     renderPopover() {
@@ -82,8 +103,8 @@ export default class extends BaseComponent {
             </Popover>
         )
     }
-    handleClick = (callback, param) => {
-        callback(param)
+    handleClick = async(callback, param) => {
+        await callback(param)
         this.props.refetch()
     }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash'
 import I18N from '@/I18N'
-import { Row, Col } from 'antd'
+import { Row, Col, Spin } from 'antd'
 import StandardPage from '../../StandardPage';
 import Comments from '@/module/common/comments/Container'
 import ActionsContainer from '../common/actions/Container'
@@ -32,6 +32,9 @@ export default class extends StandardPage {
     }
 
     ord_renderContent() {
+        if (_.isEmpty(this.props.detail) || this.props.detail.loading) {
+            return <div class="center"><Spin size="large" /></div>
+        }
         const detailNode = this.renderDetail()
         const translationBtn = this.renderTranslationBtn()
         const actionsNode = this.renderActionsNode()

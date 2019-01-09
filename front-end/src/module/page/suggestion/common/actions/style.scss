@@ -23,4 +23,13 @@
     justify-content: flex-end;
     flex-basis: 40%;
   }
+  svg {
+    fill: rgba(3, 30, 40, 0.3);
+  }
+  .selected {
+    color: black;
+    svg {
+      fill: black;
+    }
+  }
 }
