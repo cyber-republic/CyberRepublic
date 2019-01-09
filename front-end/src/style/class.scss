@@ -160,7 +160,23 @@
   padding: 15px 31px 10px;
   height: 53px;
 }
-.ant-btn.cr-btn.cr-btn-primary {
+.ant-btn.cr-btn-default {
+  border-radius: 0;
+  border: 1px solid black;
+  > span {
+    font-size: 16px;
+    color: black;
+  }
+  &:hover {
+    > span {
+      color: $cr_btn_primary;
+    }
+    border-color: $cr_btn_primary;
+  }
+  padding: 8px 30px;
+  height: 40px;
+}
+.ant-btn.cr-btn-primary {
   background: $cr_btn_primary;
   border-color: $cr_btn_primary;
   > span {

@@ -180,10 +180,10 @@ class C extends BaseComponent {
                     {p.description}
                 </FormItem>
                 <FormItem wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 12, offset: 8}}} className='form-actions'>
-                    <Button type='ebp' className='cr-btn' onClick={this.props.showCreateForm}>
+                    <Button type='ebp' className='cr-btn-default' onClick={this.props.showCreateForm}>
                         {I18N.get('suggestion.cancel')}
                     </Button>
-                    <Button loading={this.props.loading} type='ebp' htmlType='submit' className='cr-btn cr-btn-primary'>
+                    <Button loading={this.props.loading} type='ebp' htmlType='submit' className='cr-btn-default cr-btn-primary'>
                         {I18N.get('suggestion.submit')}
                     </Button>
                 </FormItem>
