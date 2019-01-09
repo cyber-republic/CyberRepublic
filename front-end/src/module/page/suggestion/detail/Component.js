@@ -73,9 +73,11 @@ export default class extends StandardPage {
     }
     renderMetaNode() {
         const { detail } = this.props
-        const author = `${_.get(detail, 'createdBy.profile.firstName')} ${_.get(detail, 'createdBy.profile.lastName')}`
-        const data = { ...detail, author }
-        return <MetaContainer data={data} />
+        return <MetaContainer data={detail} />
+    }
+    renderActionsNode() {
+        const { detail } = this.props
+        return <ActionsContainer data={detail} refetch={this.refetch} />
     }
     renderTitleNode() {
         const { detail } = this.props
@@ -95,11 +97,6 @@ export default class extends StandardPage {
         return (
             <div>Translate in English</div>
         )
-    }
-    renderActionsNode() {
-        const { detail } = this.props
-
-        return <ActionsContainer data={detail} refetch={this.refetch} />
     }
     renderCommentNode() {
         const { detail } = this.props

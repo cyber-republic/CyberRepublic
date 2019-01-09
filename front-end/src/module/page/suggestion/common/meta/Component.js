@@ -1,11 +1,14 @@
 import React from 'react';
 import moment from 'moment/moment'
+import _ from 'lodash'
 import I18N from '@/I18N'
 
 import './style.scss'
 
 export default ({ data }) => {
-    const { displayId, author, createdAt } = data;
+    const { displayId, createdAt } = data;
+    const author = data.author || `${_.get(data, 'createdBy.profile.firstName')} ${_.get(data, 'createdBy.profile.lastName')}`
+
     return (
         <div className='c_SuggestionMeta'>
             <span>{`#${displayId}`}</span>

@@ -17,4 +17,10 @@
     font-weight: bold;
     font-size: 20px;
   }
+  .self-right {
+    justify-self: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    flex-basis: 40%;
+  }
 }
