@@ -172,28 +172,16 @@ export default class extends StandardPage {
     }
     renderList() {
         const { dataList } = this.props
-        const dataSource = _.map(dataList, data => ({
-            href: `/suggestion/${data._id}`,
-            title: data.title,
-            desc: data.desc, // TODO: limited length
-            createdAt: data.createdAt,
-            author: `${_.get(data, 'createdBy.profile.firstName')} ${_.get(data, 'createdBy.profile.lastName')}`,
-            likesNum: data.likesNum,
-            dislikesNum: data.dislikesNum,
-            commentsNum: data.commentsNum,
-            viewsNum: data.viewsNum,
-            _id: data._id,
-            displayId: data.displayId
-        }))
-
-        const result = _.map(dataSource, data => this.renderItem(data))
+        const result = _.map(dataList, data => this.renderItem(data))
         return <div className='list-container'>{result}</div>
     }
 
     renderItem = data => {
-        const actionsNode = this.renderActionsNode(data)
-        const metaNode = this.renderMetaNode(data)
-        const title = <a href={data.href} className='title-link'>{data.title}</a>
+        const href = `/suggestion/${data._id}`
+        const author = `${_.get(data, 'createdBy.profile.firstName')} ${_.get(data, 'createdBy.profile.lastName')}`
+        const actionsNode = this.renderActionsNode({...data, author})
+        const metaNode = this.renderMetaNode({...data, author})
+        const title = <a href={href} className='title-link'>{data.title}</a>
         return (
             <div key={data._id} className='item-container'>
                 {metaNode}

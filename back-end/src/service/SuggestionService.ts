@@ -48,10 +48,12 @@ export default class extends Base {
   }
 
   public async show(param: any): Promise<Document> {
-    const { id: _id } = param
-    await this.model.findOneAndUpdate({ _id }, {
-      $inc: { viewsNum: 1, activeness: 1 }
-    })
+    const { id: _id, incViewsNum } = param
+    if (incViewsNum === 'true') {
+      await this.model.findOneAndUpdate({ _id }, {
+        $inc: { viewsNum: 1, activeness: 1 }
+      })
+    }
 
     return this.model.getDBInstance()
       .findById(_id)
@@ -66,7 +68,7 @@ export default class extends Base {
     const { likes, dislikes } = doc
 
     // can not both like and dislike, use ObjectId.equals to compare
-    if (_.findIndex(dislikes, oid => userId.equals(oid)) !== -1) return
+    if (_.findIndex(dislikes, oid => userId.equals(oid)) !== -1) return doc
 
     // already liked, will unlike, use ObjectId.equals to compare
     if (_.findIndex(likes, oid => userId.equals(oid)) !== -1) {
@@ -93,7 +95,7 @@ export default class extends Base {
     const { likes, dislikes } = doc
 
     // can not both like and dislike, use ObjectId.equals to compare
-    if (_.findIndex(likes, oid => userId.equals(oid)) !== -1) return
+    if (_.findIndex(likes, oid => userId.equals(oid)) !== -1) return doc
 
     // already liked, will unlike, use ObjectId.equals to compare
     if (_.findIndex(dislikes, oid => userId.equals(oid)) !== -1) {

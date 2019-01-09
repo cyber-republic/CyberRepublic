@@ -49,22 +49,14 @@ export default class extends BaseComponent {
 
     renderList() {
         const { dataList } = this.props
-        const dataSource = _.map(dataList, data => ({
-            href: `/suggestion/${data._id}`,
-            title: data.title,
-            desc: data.desc, // TODO: limited length
-            createdAt: data.createdAt,
-            _id: data._id,
-            displayId: data.displayId
-        }))
-
-        const result = _.map(dataSource, data => this.renderItem(data))
+        const result = _.map(dataList, data => this.renderItem(data))
         return <div className='list-container'>{result}</div>
     }
 
     renderItem = data => {
         const metaNode = this.renderMetaNode(data)
-        const title = <a href={data.href} className='title-link'>{data.title}</a>
+        const href = `/suggestion/${data._id}`
+        const title = <a href={href} className='title-link'>{data.title}</a>
         return (
             <div key={data._id} className='item-container'>
                 {metaNode}
@@ -73,8 +65,8 @@ export default class extends BaseComponent {
         )
     }
 
-    renderMetaNode(detail) {
-        return <MetaContainer data={detail} hideAuthor />
+    renderMetaNode(data) {
+        return <MetaContainer data={data} hideAuthor />
     }
     /**
      * Builds the query from the current state
