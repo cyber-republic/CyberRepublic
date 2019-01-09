@@ -160,6 +160,13 @@
   padding: 15px 31px 10px;
   height: 53px;
 }
+.ant-btn.cr-btn.cr-btn-primary {
+  background: $cr_btn_primary;
+  border-color: $cr_btn_primary;
+  > span {
+    color: white;
+  }
+}
 
 .cr-input {
   .ant-select-selection {

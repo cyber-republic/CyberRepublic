@@ -76,6 +76,8 @@ class C extends BaseComponent {
 
                 try {
                     await this.props.create(createParams)
+                    this.props.showCreateForm()
+                    this.props.refetch()
                 } catch (error) {
                     console.log(error)
                 }
@@ -109,7 +111,7 @@ class C extends BaseComponent {
         const description_fn = getFieldDecorator('description', {
             rules: [
                 {required: true, message: I18N.get('suggestion.create.error.descriptionRequired')},
-                {min: 4, message: I18N.get('suggestion.create.error.descriptionTooShort')}
+                {min: 20, message: I18N.get('suggestion.create.error.descriptionTooShort')}
             ],
             initialValue: ''
         })
@@ -148,8 +150,14 @@ class C extends BaseComponent {
             showTranslate: !this.state.isTranslateModalOpen
         })
     }
+    renderHeader() {
+        return (
+            <h2 className='title komu-a'>{this.props.header || I18N.get('suggestion.add').toUpperCase()}</h2>
+        )
+    }
 
     ord_render () {
+        const headerNode = this.renderHeader()
         const p = this.getInputProps()
 
         const formItemLayout = {
@@ -165,17 +173,17 @@ class C extends BaseComponent {
 
         const formContent = (
             <div>
-                <FormItem {...formItemLayout}>
+                <FormItem {...formItemLayout} className='form-title'>
                     {p.title}
                 </FormItem>
-                <FormItem {...formItemLayout}>
+                <FormItem {...formItemLayout} className='form-desc'>
                     {p.description}
                 </FormItem>
-                <FormItem wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 12, offset: 8}}}>
-                    <Button type='ebp' className='d_btn' onClick={this.props.showCreateForm}>
+                <FormItem wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 12, offset: 8}}} className='form-actions'>
+                    <Button type='ebp' className='cr-btn' onClick={this.props.showCreateForm}>
                         {I18N.get('suggestion.cancel')}
                     </Button>
-                    <Button loading={this.props.loading} type='ebp' htmlType='submit' className='d_btn'>
+                    <Button loading={this.props.loading} type='ebp' htmlType='submit' className='cr-btn cr-btn-primary'>
                         {I18N.get('suggestion.submit')}
                     </Button>
                 </FormItem>
@@ -184,6 +192,7 @@ class C extends BaseComponent {
         const translationModal = this.renderTranslationModal()
         return (
             <div className='c_SuggestionForm'>
+                {headerNode}
                 <Form onSubmit={this.handleSubmit.bind(this)} className='d_SuggestionForm'>
                     {formContent}
                 </Form>

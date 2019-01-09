@@ -109,7 +109,7 @@ export default class extends StandardPage {
                 width="70%"
             >
                 { this.state.showForm &&
-                    <SuggestionForm showCreateForm={this.showCreateForm}/>
+                    <SuggestionForm showCreateForm={this.showCreateForm} refetch={this.refetch} />
                 }
             </Modal>
         )
