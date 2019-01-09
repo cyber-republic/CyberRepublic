@@ -1,9 +1,8 @@
 import React from 'react';
-import moment from 'moment/moment'
 import _ from 'lodash'
-import { List } from 'antd';
 import I18N from '@/I18N'
 import BaseComponent from '@/model/BaseComponent'
+import MetaContainer from '../common/meta/Container'
 
 import './style.scss'
 
@@ -47,36 +46,36 @@ export default class extends BaseComponent {
             </div>
         )
     }
+
     renderList() {
-        const suggestionsList = this.props.my_suggestions;
-        const listData = _.map(suggestionsList, data => ({
+        const { dataList } = this.props
+        const dataSource = _.map(dataList, data => ({
             href: `/suggestion/${data._id}`,
             title: data.title,
-            content: data.desc, // TODO: limited length
+            desc: data.desc, // TODO: limited length
             createdAt: data.createdAt,
             _id: data._id,
             displayId: data.displayId
         }))
 
-        return <List
-            itemLayout='vertical'
-            dataSource={listData}
-            renderItem={item => (
-                <List.Item
-                    key={item._id}
-                >
-                    <List.Item.Meta
-                        title={<a href={item.href}>{item.title}</a>}
-                        description = {
-                            `#${item.displayId} ${moment(item.createdAt).format('MMM D, YYYY')}`
-                        }
-                    />
-                    {/* <span dangerouslySetInnerHTML={{__html: item.content}}></span> */}
-                </List.Item>
-            )}
-        />
+        const result = _.map(dataSource, data => this.renderItem(data))
+        return <div className='list-container'>{result}</div>
     }
 
+    renderItem = data => {
+        const metaNode = this.renderMetaNode(data)
+        const title = <a href={data.href} className='title-link'>{data.title}</a>
+        return (
+            <div key={data._id} className='item-container'>
+                {metaNode}
+                {title}
+            </div>
+        )
+    }
+
+    renderMetaNode(detail) {
+        return <MetaContainer data={detail} hideAuthor />
+    }
     /**
      * Builds the query from the current state
      */
