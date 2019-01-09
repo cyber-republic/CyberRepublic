@@ -189,15 +189,16 @@ class C extends BaseComponent {
                 </FormItem>
             </div>
         )
-        const translationModal = this.renderTranslationModal()
+        // TODO
+        // const translationModal = this.renderTranslationModal()
         return (
             <div className='c_SuggestionForm'>
                 {headerNode}
                 <Form onSubmit={this.handleSubmit.bind(this)} className='d_SuggestionForm'>
                     {formContent}
                 </Form>
-                <div onClick={this.showTranslate}>{I18N.get('suggestion.translate')}</div>
-                {translationModal}
+                {/* <div onClick={this.showTranslate}>{I18N.get('suggestion.translate')}</div> */}
+                {/* {translationModal} */}
             </div>
         )
     }
