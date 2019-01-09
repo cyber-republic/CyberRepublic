@@ -2,18 +2,18 @@ import React from 'react';
 import _ from 'lodash'
 import moment from 'moment/moment'
 import {
-    List,
-    Icon,
+    Pagination,
     Modal,
     Button,
-    Popover,
-    Col, Row, Input, Select
+    Col, Row, Select
 } from 'antd';
 import I18N from '@/I18N'
 import StandardPage from '../../StandardPage';
 import Footer from '@/module/layout/Footer/Container'
 import MySuggestion from '../my_list/Container'
 import SuggestionForm from '@/module/form/SuggestionForm/Container'
+import ActionsContainer from '../common/actions/Container'
+import MetaContainer from '../common/meta/Container'
 
 import { ReactComponent as LikeIcon } from '@/assets/images/icon-like.svg'
 import { ReactComponent as DislikeIcon } from '@/assets/images/icon-dislike.svg'
@@ -78,6 +78,7 @@ export default class extends StandardPage {
         const addButtonNode = this.renderAddButton()
         const actionsNode = this.renderHeaderActions()
         const listNode = this.renderList()
+        const paginationNode = this.renderPagination()
         const mySuggestionNode = this.renderMySuggestion()
         const createForm = this.renderCreateForm()
         return (
@@ -89,7 +90,10 @@ export default class extends StandardPage {
                         <Col span={9}>{addButtonNode}</Col>
                     </Row>
                     <Row gutter={24}>
-                        <Col span={15}>{listNode}</Col>
+                        <Col span={15}>
+                            {listNode}
+                            {paginationNode}
+                        </Col>
                         <Col span={9}>{mySuggestionNode}</Col>
                     </Row>
                     {createForm}
@@ -168,82 +172,54 @@ export default class extends StandardPage {
         )
     }
     renderList() {
-        const { dataList, total } = this.props
+        const { dataList } = this.props
         const { results } = this.state
         const dataSource = _.map(dataList, data => ({
             href: `/suggestion/${data._id}`,
             title: data.title,
-            content: data.desc, // TODO: limited length
+            desc: data.desc, // TODO: limited length
             createdAt: data.createdAt,
             author: `${_.get(data, 'createdBy.profile.firstName')} ${_.get(data, 'createdBy.profile.lastName')}`,
             likesNum: data.likesNum,
             dislikesNum: data.dislikesNum,
-            commentsNum: data.commentsNum || 0,
-            viewsNum: data.viewsNum || 0,
+            commentsNum: data.commentsNum,
+            viewsNum: data.viewsNum,
             _id: data._id,
             displayId: data.displayId
         }))
-        const IconText = ({ component, text }) => {
-            return (
-                <span className='cr-icon-group'>
-                    <span>{component}</span>
-                    <span style={{marginLeft: 8}}>{text}</span>
-                </span>
-            )
-        }
-        const getActions = ({ likesNum, dislikesNum, commentsNum, viewsNum, _id }) => {
-            const content = (
-                <div>
-                    <div onClick={() => this.props.subscribe(_id)}>
-                        <IconText component={<FollowIcon />} text={I18N.get('suggestion.follow')} />
-                    </div>
-                    <div onClick={() => this.props.reportAbuse(_id)}>
-                        <IconText component={<FlagIcon />} text={I18N.get('suggestion.reportAbuse')} />
-                    </div>
-                </div>
-            )
-            const dropdownActions = (
-                <Popover content={content} trigger='click'>
-                    <Icon type={'ellipsis'} />
-                </Popover>
-            )
-            return ([
-                <IconText component={<LikeIcon />} text={likesNum} />,
-                <IconText component={<DislikeIcon />} text={dislikesNum} />,
-                <IconText component={<CommentIcon />} text={commentsNum} />,
-                dropdownActions,
-                <span className='pull-right'>{viewsNum} {I18N.get('suggestion.views').toLowerCase()}</span>
-            ])
-        }
-        const renderItem = item => (
-            <List.Item
-                key={item._id}
-                actions={getActions(item)}
-            >
-                <List.Item.Meta
-                    title={<a href={item.href} style={{fontSize: 20}}>{item.title}</a>}
-                    description = {
-                        `#${item.displayId}  ${I18N.get('suggestion.postedBy')} ${item.author} ${moment(item.createdAt).format('MMM D, YYYY')}`
-                    }
-                />
-                {/* <span dangerouslySetInnerHTML={{__html: item.content}}></span> */}
-            </List.Item>
-        )
-        return <List
-            itemLayout='vertical'
-            pagination={{
-                pageSize: results,
-                total: total,
-                onChange: this.loadPage
-            }}
-            dataSource={dataSource}
-            renderItem={renderItem}
-        />
+
+        const result = _.map(dataSource, data => this.renderItem(data))
+        return <div className='list-container'>{result}</div>
     }
-    showDropdownActions = () => {
-        this.setState({
-            isDropdownActionOpen: !this.state.isDropdownActionOpen
-        })
+
+    renderItem = data => {
+        const actionsNode = this.renderActionsNode(data)
+        const metaNode = this.renderMetaNode(data)
+        const title = <a href={data.href} className='title-link'>{data.title}</a>
+        return (
+            <div key={data._id} className='item-container'>
+                {metaNode}
+                {title}
+                {actionsNode}
+            </div>
+        )
+    }
+    renderPagination() {
+        const { total } = this.props
+        const { results, page } = this.state
+        const props = {
+            pageSize: results,
+            total,
+            current: page,
+            onChange: this.loadPage
+        }
+        return <Pagination {...props} className='cr-pagination' />
+    }
+    renderMetaNode(detail) {
+        return <MetaContainer data={detail} />
+    }
+    renderActionsNode(detail) {
+        return <ActionsContainer data={detail} refetch={this.refetch} />
     }
     renderMySuggestion() {
         return <MySuggestion />
