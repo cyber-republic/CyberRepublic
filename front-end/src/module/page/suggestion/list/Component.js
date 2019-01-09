@@ -73,7 +73,6 @@ export default class extends StandardPage {
 
     ord_renderContent() {
         const { dataList, total } = this.props;
-        console.log(dataList, total)
         const headerNode = this.renderHeader()
         const addButtonNode = this.renderAddButton()
         const actionsNode = this.renderHeaderActions()
@@ -173,7 +172,6 @@ export default class extends StandardPage {
     }
     renderList() {
         const { dataList } = this.props
-        const { results } = this.state
         const dataSource = _.map(dataList, data => ({
             href: `/suggestion/${data._id}`,
             title: data.title,
