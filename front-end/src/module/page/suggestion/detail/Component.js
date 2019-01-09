@@ -23,9 +23,8 @@ export default class extends StandardPage {
     }
 
     componentDidMount() {
-        const id = _.get(this.props, 'match.params.id')
         super.componentDidMount()
-        this.props.getDetail(id)
+        this.refetch(true)
     }
 
     componentWillUnmount() {
@@ -110,6 +109,12 @@ export default class extends StandardPage {
         this.setState({
             isDropdownActionOpen: !this.state.isDropdownActionOpen
         })
+    }
+
+    refetch = async(incViewsNum) => {
+        const id = _.get(this.props, 'match.params.id')
+        await this.props.resetDetail()
+        this.props.getDetail({ id, incViewsNum: !!incViewsNum })
     }
 
     linkSuggestionDetail(suggestionId) {

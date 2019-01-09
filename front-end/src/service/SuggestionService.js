@@ -89,13 +89,14 @@ export default class extends BaseService {
 
         return res
     }
-    async getDetail(id) {
+    async getDetail({ id, incViewsNum }) {
         const selfRedux = this.store.getRedux('suggestion')
         this.dispatch(selfRedux.actions.loading_update(true))
 
         const result = await api_request({
             path: `/api/suggestion/${id}`,
-            method: 'get'
+            method: 'get',
+            data: { incViewsNum }
         })
 
         this.dispatch(selfRedux.actions.loading_update(false))

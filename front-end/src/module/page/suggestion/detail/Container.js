@@ -22,8 +22,8 @@ export default createContainer(Component, (state) => {
     const commentService = new CommentService()
 
     return {
-        async getDetail(id) {
-            return service.getDetail(id)
+        async getDetail({ id, incViewsNum }) {
+            return service.getDetail({ id, incViewsNum })
         },
 
         resetDetail() {
