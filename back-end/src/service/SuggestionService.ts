@@ -49,6 +49,10 @@ export default class extends Base {
 
   public async show(param: any): Promise<Document> {
     const { id: _id } = param
+    await this.model.findOneAndUpdate({ _id }, {
+      $inc: { viewsNum: 1, activeness: 1 }
+    })
+
     return this.model.getDBInstance()
       .findById(_id)
       .populate('createdBy', constant.DB_SELECTED_FIELDS.USER.NAME)
