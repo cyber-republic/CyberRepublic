@@ -42,7 +42,7 @@ export default class extends BaseComponent {
     renderHeader() {
         return (
             <div className='cr-mysuggestion-header'>
-                <h2 className='title komu-a'>{this.props.header || I18N.get('suggestion.title').toUpperCase()}</h2>
+                <h2 className='title komu-a'>{this.props.header || I18N.get('suggestion.mySuggestions').toUpperCase()}</h2>
                 <a href='/profile/suggestion' className='view-all-link'>{I18N.get('suggestion.viewAll')}</a>
             </div>
         )
