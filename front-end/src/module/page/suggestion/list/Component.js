@@ -221,7 +221,7 @@ export default class extends StandardPage {
                 actions={getActions(item)}
             >
                 <List.Item.Meta
-                    title={<a href={item.href}>{item.title}</a>}
+                    title={<a href={item.href} style={{fontSize: 20}}>{item.title}</a>}
                     description = {
                         `#${item.displayId}  ${I18N.get('suggestion.postedBy')} ${item.author} ${moment(item.createdAt).format('MMM D, YYYY')}`
                     }
