@@ -16194,6 +16194,12 @@ tr.ant-table-expanded-row:hover {
 .ant-table-fixed-right .ant-table-thead > tr > th:first-child {
   border-top-left-radius: 0;
 }
+.ant-table-thead > tr:first-child > th:first-child {
+  border-top-left-radius: 0;
+}
+.ant-table-thead > tr:first-child > th:last-child {
+  border-top-right-radius: 0;
+}
 .ant-table.ant-table-scroll-position-left .ant-table-fixed-left {
   box-shadow: none;
 }
