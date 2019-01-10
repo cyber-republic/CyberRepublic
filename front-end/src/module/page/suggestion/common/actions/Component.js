@@ -3,6 +3,7 @@ import moment from 'moment/moment'
 import _ from 'lodash'
 import { Popover, Icon } from 'antd';
 import I18N from '@/I18N'
+import { SUGGESTION_ABUSED_STATUS } from '@/constant'
 import BaseComponent from '@/model/BaseComponent'
 
 import { ReactComponent as LikeIcon } from '@/assets/images/icon-like.svg'
@@ -34,10 +35,9 @@ export default class extends BaseComponent {
     ord_render() {
         const { data, like, dislike, currentUserId } = this.props
         const popoverActions = this.renderPopover()
-        const { likesNum, dislikesNum, commentsNum, viewsNum, _id, likes, dislikes, subscribers } = data
+        const { likesNum, dislikesNum, commentsNum, viewsNum, _id, likes, dislikes } = data
         const isLiked = _.includes(likes, currentUserId)
         const isDisliked = _.includes(dislikes, currentUserId)
-        const isSubscribed = _.includes(subscribers, currentUserId)
         const likeClass = isLiked ? 'selected' : ''
         const dislikeClass = isDisliked ? 'selected' : ''
         const likeNode = (
@@ -82,23 +82,27 @@ export default class extends BaseComponent {
         return result
     }
     renderPopover() {
-        const { subscribe, reportAbuse, data: { _id } } = this.props
+        const { subscribe, reportAbuse, data: { _id, subscribers, abusedStatus }, currentUserId } = this.props
+        const isSubscribed = _.findIndex(subscribers, subscriber => subscriber.user === currentUserId) !== -1
+        const isAbused = abusedStatus === SUGGESTION_ABUSED_STATUS.REPORTED
         const content = (
             <div className='popover-actions'>
                 <IconText
                     component={<FollowIcon />}
                     text={I18N.get('suggestion.follow')}
                     onClick={() => this.handleClick(subscribe, _id)}
+                    className={`follow-icon ${isSubscribed ? 'selected' : ''}`}
                 />
                 <IconText
                     component={<FlagIcon />}
                     text={I18N.get('suggestion.reportAbuse')}
                     onClick={() => this.handleClick(reportAbuse, _id)}
+                    className={`abuse-icon ${isAbused ? 'selected' : ''}`}
                 />
             </div>
         )
         return (
-            <Popover content={content} trigger='click' className=''>
+            <Popover content={content} trigger='click'>
                 <Icon type={'ellipsis'} />
             </Popover>
         )
