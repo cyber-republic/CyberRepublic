@@ -9,12 +9,6 @@ import SuggestionForm from '@/module/form/SuggestionForm/Container'
 import ActionsContainer from '../common/actions/Container'
 import MetaContainer from '../common/meta/Container'
 
-import { ReactComponent as LikeIcon } from '@/assets/images/icon-like.svg'
-import { ReactComponent as DislikeIcon } from '@/assets/images/icon-dislike.svg'
-import { ReactComponent as CommentIcon } from '@/assets/images/icon-comment.svg'
-import { ReactComponent as FollowIcon } from '@/assets/images/icon-follow.svg'
-import { ReactComponent as FlagIcon } from '@/assets/images/icon-flag.svg'
-
 import MediaQuery from 'react-responsive'
 import { MAX_WIDTH_MOBILE, MIN_WIDTH_PC } from '@/config/constant'
 
