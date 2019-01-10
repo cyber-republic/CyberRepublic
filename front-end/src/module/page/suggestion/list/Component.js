@@ -1,12 +1,6 @@
 import React from 'react';
 import _ from 'lodash'
-import moment from 'moment/moment'
-import {
-    Pagination,
-    Modal,
-    Button,
-    Col, Row, Select
-} from 'antd';
+import { Pagination, Modal, Button, Col, Row, Select, Spin } from 'antd';
 import I18N from '@/I18N'
 import StandardPage from '../../StandardPage';
 import Footer from '@/module/layout/Footer/Container'
@@ -72,7 +66,11 @@ export default class extends StandardPage {
     }
 
     ord_renderContent() {
-        const { dataList, total } = this.props;
+        const { dataList, loading } = this.props;
+        if (_.isEmpty(dataList) || loading) {
+            return <div class="center"><Spin size="large" /></div>
+        }
+
         const headerNode = this.renderHeader()
         const addButtonNode = this.renderAddButton()
         const actionsNode = this.renderHeaderActions()

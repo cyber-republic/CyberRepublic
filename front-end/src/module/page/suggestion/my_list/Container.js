@@ -29,7 +29,7 @@ const mapDispatch = () => {
             })
         },
         resetAll() {
-            return service.resetAll()
+            return service.resetMyList()
         }
     }
 }
