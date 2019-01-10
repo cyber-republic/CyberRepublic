@@ -198,6 +198,8 @@ const en = {
     'user.unfollow': 'Unfollow',
 
     // suggestion
+    'suggestion.nodata': 'No Data',
+    'suggestion.befirst': 'Be the first one to create a suggestion',
     'suggestion.subject': 'Subject',
     'suggestion.title': 'Suggestions',
     'suggestion.add': 'Add a Suggestion',

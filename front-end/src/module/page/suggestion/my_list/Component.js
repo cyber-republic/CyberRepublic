@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash'
+import { Spin } from 'antd'
 import I18N from '@/I18N'
 import BaseComponent from '@/model/BaseComponent'
 import MetaContainer from '../common/meta/Container'
@@ -28,9 +29,15 @@ export default class extends BaseComponent {
     }
 
     ord_render() {
-        if (!this.props.currentUserId) return null
+        const { dataList, loading, currentUserId } = this.props;
+        const loadingNode = <div class="center"><Spin size="large" /></div>
+        let listNode = loading ? loadingNode : this.renderList()
+
+        if (_.isEmpty(dataList) && !loading || !currentUserId) {
+            listNode = <div class="center">{I18N.get('suggestion.nodata')}</div>
+        }
+
         const headerNode = this.renderHeader()
-        const listNode = this.renderList()
         return (
             <div className='p_MySuggestionList'>
                 {headerNode}
