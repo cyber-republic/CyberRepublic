@@ -128,9 +128,9 @@ export default class extends StandardPage {
                     onChange={this.onSortByChanged}
                     value={this.state.sortBy}
                 >
-                    {_.map(SORT_BY, (filter, key) => {
-                        return <Select.Option key={filter} value={filter}>
-                            {key}
+                    {_.map(SORT_BY, (value, key) => {
+                        return <Select.Option key={value} value={value}>
+                            {SORT_BY_TEXT[value]}
                         </Select.Option>
                     })}
                 </Select>
