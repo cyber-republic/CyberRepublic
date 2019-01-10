@@ -61,15 +61,11 @@ export default class extends StandardPage {
 
     ord_renderContent() {
         const { dataList, loading } = this.props;
-        if (_.isEmpty(dataList) || loading) {
-            return <div class="center"><Spin size="large" /></div>
-        }
-
+        const loadingNode = <div class="center"><Spin size="large" /></div>
         const headerNode = this.renderHeader()
         const addButtonNode = this.renderAddButton()
         const actionsNode = this.renderHeaderActions()
-        const listNode = this.renderList()
-        const paginationNode = this.renderPagination()
+        const listNode = _.isEmpty(dataList) || loading ? loadingNode : this.renderList()
         const mySuggestionNode = this.renderMySuggestion()
         const createForm = this.renderCreateForm()
         return (
@@ -83,7 +79,6 @@ export default class extends StandardPage {
                     <Row gutter={24}>
                         <Col span={15}>
                             {listNode}
-                            {paginationNode}
                         </Col>
                         <Col span={9}>{mySuggestionNode}</Col>
                     </Row>
@@ -165,7 +160,13 @@ export default class extends StandardPage {
     renderList() {
         const { dataList } = this.props
         const result = _.map(dataList, data => this.renderItem(data))
-        return <div className='list-container'>{result}</div>
+        const paginationNode = this.renderPagination()
+        return (
+            <div>
+                <div className='list-container'>{result}</div>
+                {paginationNode}
+            </div>
+        )
     }
 
     renderItem = data => {
