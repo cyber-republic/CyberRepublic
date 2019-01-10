@@ -26,25 +26,34 @@ const IconText = ({ component, text, onClick, className = '' }) => {
 export default class extends BaseComponent {
     constructor(props) {
         super(props)
+        const { currentUserId, data: { likesNum, dislikesNum, likes, dislikes, subscribers, abusedStatus } } = this.props
+        const isLiked = _.includes(likes, currentUserId)
+        const isDisliked = _.includes(dislikes, currentUserId)
+        const isSubscribed = _.findIndex(subscribers, subscriber => subscriber.user === currentUserId) !== -1
+        const isAbused = abusedStatus === SUGGESTION_ABUSED_STATUS.REPORTED
 
-        // we use the props from the redux store if its retained
         this.state = {
+            isLiked,
+            isDisliked,
+            isSubscribed,
+            isAbused,
+            likesNum,
+            dislikesNum
         }
     }
 
     ord_render() {
-        const { data, like, dislike, currentUserId } = this.props
+        const { data, like, dislike } = this.props
         const popoverActions = this.renderPopover()
-        const { likesNum, dislikesNum, commentsNum, viewsNum, _id, likes, dislikes } = data
-        const isLiked = _.includes(likes, currentUserId)
-        const isDisliked = _.includes(dislikes, currentUserId)
+        const { commentsNum, viewsNum, _id } = data
+        const { isLiked, isDisliked, likesNum, dislikesNum } = this.state
         const likeClass = isLiked ? 'selected' : ''
         const dislikeClass = isDisliked ? 'selected' : ''
         const likeNode = (
             <IconText
                 component={<LikeIcon />}
                 text={likesNum}
-                onClick={() => this.handleClick(like, _id)}
+                onClick={() => this.handleClick({callback: like, param: _id, state: 'isLiked'})}
                 className={likeClass}
             />
         )
@@ -53,7 +62,7 @@ export default class extends BaseComponent {
             <IconText
                 component={<DislikeIcon />}
                 text={dislikesNum}
-                onClick={() => this.handleClick(dislike, _id)}
+                onClick={() => this.handleClick({callback: dislike, param: _id, state: 'isDisliked'})}
                 className={dislikeClass}
             />
         )
@@ -82,21 +91,21 @@ export default class extends BaseComponent {
         return result
     }
     renderPopover() {
-        const { subscribe, reportAbuse, data: { _id, subscribers, abusedStatus }, currentUserId } = this.props
-        const isSubscribed = _.findIndex(subscribers, subscriber => subscriber.user === currentUserId) !== -1
-        const isAbused = abusedStatus === SUGGESTION_ABUSED_STATUS.REPORTED
+        const { subscribe, unsubscribe, reportAbuse, data: { _id } } = this.props
+        const { isSubscribed, isAbused } = this.state
+        const subscribeCallback = isSubscribed ? unsubscribe : subscribe
         const content = (
             <div className='popover-actions'>
                 <IconText
                     component={<FollowIcon />}
                     text={I18N.get('suggestion.follow')}
-                    onClick={() => this.handleClick(subscribe, _id)}
+                    onClick={() => this.handleClick({callback: subscribeCallback, param: _id, state: 'isSubscribed', before: true})}
                     className={`follow-icon ${isSubscribed ? 'selected' : ''}`}
                 />
                 <IconText
                     component={<FlagIcon />}
                     text={I18N.get('suggestion.reportAbuse')}
-                    onClick={() => this.handleClick(reportAbuse, _id)}
+                    onClick={() => this.handleClick({callback: reportAbuse, param: _id, state: 'isAbused'})}
                     className={`abuse-icon ${isAbused ? 'selected' : ''}`}
                 />
             </div>
@@ -107,15 +116,34 @@ export default class extends BaseComponent {
             </Popover>
         )
     }
-    handleClick = async(callback, param) => {
-        await callback(param)
-        this.props.refetch()
-    }
+    // use setState for better UX
+    // before param is used to setState before api request which will cause rerendering
+    // and get error of setState on unmounted component
+    handleClick = async({ callback, param, state }) => {
+        const { refetch } = this.props
+        const { isLiked, isDisliked, isAbused, likesNum, dislikesNum } = this.state
+        if ((state === 'isAbused' && isAbused) ||
+            (state === 'isLiked' && isDisliked) ||
+            (state === 'isDisliked' && isLiked))
+        {
+            return
+        }
+        try {
+            await callback(param)
 
-    showPopOverActions = () => {
-        this.setState({
-            isPopOverOpen: !this.state.isPopOverOpen
-        })
+            if (refetch) {
+                refetch()
+            } else {
+                if (state === 'isLiked') {
+                    this.setState({ likesNum: isLiked ? likesNum - 1 : likesNum + 1 })
+                } else if (state === 'isDisliked') {
+                    this.setState({ dislikesNum: isDisliked ? dislikesNum - 1 : dislikesNum + 1 })
+                }
+    
+                this.setState({[state]: !this.state[state]})
+            }
+        } catch (error) {
+            // err happened
+        }
     }
-
 }

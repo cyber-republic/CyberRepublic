@@ -37,11 +37,11 @@ const mapDispatch = () => {
             return service.reportAbuse(id)
         },
         async subscribe(id) {
-            return commentService.subscribe('suggestion', id)
+            return commentService.subscribeWithoutRedux('suggestion', id)
         },
 
         async unsubscribe(id) {
-            return commentService.unsubscribe('suggestion', id)
+            return commentService.unsubscribeWithoutRedux('suggestion', id)
         },
         resetAll() {
             return service.resetAll()

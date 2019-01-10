@@ -197,7 +197,7 @@ export default class extends StandardPage {
         return <MetaContainer data={detail} />
     }
     renderActionsNode(detail) {
-        return <ActionsContainer data={detail} refetch={this.refetch} />
+        return <ActionsContainer data={detail} />
     }
     renderMySuggestion() {
         return <MySuggestion />

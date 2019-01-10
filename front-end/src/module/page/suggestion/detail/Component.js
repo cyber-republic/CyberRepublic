@@ -79,7 +79,7 @@ export default class extends StandardPage {
     }
     renderActionsNode() {
         const { detail } = this.props
-        return <ActionsContainer data={detail} refetch={this.refetch} />
+        return <ActionsContainer data={detail} />
     }
     renderTitleNode() {
         const { detail } = this.props
