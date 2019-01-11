@@ -43,7 +43,7 @@ export default class extends BaseService {
     }
     async myList(qry) {
 
-        // this.dispatch(this.selfRedux.actions.loading_update(true))
+        this.dispatch(this.selfRedux.actions.my_suggestions_loading_update(true))
 
         const path = '/api/suggestion/list'
         // this.abortFetch(path)
@@ -57,7 +57,7 @@ export default class extends BaseService {
                 signal: this.getAbortSignal(path)
             })
 
-            // this.dispatch(this.selfRedux.actions.loading_update(false))
+            this.dispatch(this.selfRedux.actions.my_suggestions_loading_update(false))
             this.dispatch(this.selfRedux.actions.my_suggestions_reset())
             this.dispatch(this.selfRedux.actions.my_suggestions_total_update(result.total))
             this.dispatch(this.selfRedux.actions.my_suggestions_update(_.values(result.list)))

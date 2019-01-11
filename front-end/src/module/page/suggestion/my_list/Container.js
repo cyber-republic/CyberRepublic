@@ -7,11 +7,12 @@ import Component from './Component'
 const mapState = (state) => {
     const currentUserId = state.user.current_user_id
     // const isAdmin = state.user.role === USER_ROLE.ADMIN
-
+    const { my_suggestions: dataList, my_suggestions_total: total } = state.suggestion 
     const suggestionState = {
         ...state.suggestion,
-        dataList: state.suggestion.my_suggestions,
-        total: state.suggestion.my_suggestions_total,
+        dataList,
+        total,
+        loading,
         currentUserId
     }
 

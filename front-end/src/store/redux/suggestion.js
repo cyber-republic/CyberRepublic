@@ -22,6 +22,7 @@ class SuggestionRedux extends BaseRedux {
             all_suggestions: [],
             all_suggestions_total: 0,
 
+            my_suggestions_loading: false,
             my_suggestions: [],
             my_suggestions_total: 0,
 
