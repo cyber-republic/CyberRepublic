@@ -149,7 +149,11 @@ export const USER_SKILLSET = {
         'LEGAL_CONSULTING', 'FINANCIAL_CONSULTING', 'PRESENTATION'])
 }
 
-export const SORT_ORDER = create(['ASC', 'DESC'])
+// mongo do not support ASC and DESC options
+export const SORT_ORDER = {
+    ASC: 1,
+    DESC: -1
+}
 
 export const USER_PROFESSION = create(['ENGINEERING', 'COMPUTER_SCIENCE', 'PRODUCT_MANAGEMENT',
     'ART_DESIGN', 'SALES', 'MARKETING', 'BUSINESS_FINANCE', 'ENTREPRENEUR', 'STUDENT',
