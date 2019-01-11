@@ -231,11 +231,12 @@ const en = {
     'suggestion.search': 'Search',
     'suggestion.cancel': 'Cancel',
     'suggestion.submit': 'Submit',
-    // error
+    // suggestion error
     'suggestion.create.error.titleRequired': 'Suggestion title is required',
     'suggestion.create.error.descriptionRequired': 'Suggestion description is required',
     'suggestion.create.error.titleTooShort': 'Suggestion title is too short',
     'suggestion.create.error.descriptionTooShort': 'Suggestion description is too short',
+
     // Developer
     'developer.breadcrumb.developers': 'Community',
     'developer.breadcrumb.search': 'Search',
