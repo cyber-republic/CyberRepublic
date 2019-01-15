@@ -1366,7 +1366,7 @@ const zh = {
     'cs.feng.name': '张烽',
     'cs.feng.intro': '律师、数字时代区块链服务联盟创始人、比特大学联合创始人，常驻上海',
     'cs.rebecca.name': '朱凤',
-    'cs.feng.intro': '亦来云基金会项目总监，常驻北京',
+    'cs.rebecca.intro': '亦来云基金会项目总监，常驻北京',
 }
 
 // lang mappings
