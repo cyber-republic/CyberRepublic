@@ -50,7 +50,7 @@
     "json2csv": "3",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.3",
-    "lodash": ">=4.17.19",
+    "lodash": ">=4.17.21",
     "mailgun-js": "^0.18.0",
     "moment": "^2.22.1",
     "mongoose": "5.7.5",
