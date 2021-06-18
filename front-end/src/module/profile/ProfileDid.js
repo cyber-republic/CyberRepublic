@@ -163,7 +163,7 @@ class ProfileDid extends Component {
     } else {
       return (
         <Fragment>
-          {/* <Popover
+          <Popover
             content={this.elaQrCode()}
             trigger="click"
             placement="top"
@@ -174,7 +174,7 @@ class ProfileDid extends Component {
               {I18N.get('profile.associateDid')}
             </Button>
           </Popover>
-          <br /> */}
+          <br />
           <Popover
             content={this.elaOldQrCode()}
             trigger="click"
