@@ -172,9 +172,9 @@ const zh = {
   'login.title': '登录 Cyber Republic',
   'login.description_1': '输入密码',
   'login.withDid': '用新版 ELA 钱包登录',
-  'login.withOldWallet': '用 ELA 钱包登录',
-  'login.qrcodeTip': '打开最新版 ELA 钱包扫码登录',
-  'login.qrcodeOldTip': '打开 ELA 钱包扫码登录',
+  'login.withOldWallet': '用旧版 ELA 钱包登录',
+  'login.qrcodeTip': '打开最新版 ELA 钱包应用扫码登录',
+  'login.qrcodeOldTip': '打开旧版 ELA 钱包应用扫码登录',
 
   // Logout
   'logout.title': '确定登出吗?',
