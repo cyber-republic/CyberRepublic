@@ -22,9 +22,9 @@ class MemberVoteQrCode extends Component {
   render() {
     return (
       <Content>
-        {/* <QRCode value={this.state.url} size={145} />
+        <QRCode value={this.state.url} size={145} />
         <Tip>{I18N.get('profile.member.vote.qrcodeTip')}</Tip>
-        <br /> */}
+        <br />
         <QRCode value={this.state.oldUrl} size={145} />
         <Tip>{I18N.get('profile.member.vote.qrcodeOldTip')}</Tip>
       </Content>
