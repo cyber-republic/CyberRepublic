@@ -14,6 +14,8 @@ export default class extends Base {
 
   public async backupCandidateList() {
     const crRelatedStageStatus = await ela.getCrrelatedStage()
+    if (!crRelatedStageStatus) return
+    // prettier-ignore
     const {
       invoting,
       votingstartheight,

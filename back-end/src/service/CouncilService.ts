@@ -578,8 +578,8 @@ export default class extends Base {
     const circulatingSupply = await ela.currentCirculatingSupply()
 
     const crRelatedStageStatus = await ela.getCrrelatedStage()
-
-    const { onduty: isOnduty, invoting: isInVoting } = crRelatedStageStatus
+    let isOnduty = crRelatedStageStatus && crRelatedStageStatus.onduty
+    let isInVoting = crRelatedStageStatus && crRelatedStageStatus.isInVoting
 
     const currentCrs = await this.model
       .getDBInstance()
