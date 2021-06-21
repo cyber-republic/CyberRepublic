@@ -192,5 +192,5 @@ agenda.define(JOB_NAME.BACKUP_CANDIDATE_LIST, async (job: any, done: any) => {
   await agenda.every('3 minutes', JOB_NAME.COUNCILREVIEWJOB)
   await agenda.every('1 minutes', JOB_NAME.TRANSACTIONJOB)
   await agenda.every('10 minutes', JOB_NAME.NOTIFICATIONCOUNCILVOTE)
-  await agenda.every('5 minutes', JOB_NAME.BACKUP_CANDIDATE_LIST)
+  // await agenda.every('5 minutes', JOB_NAME.BACKUP_CANDIDATE_LIST)
 })()
